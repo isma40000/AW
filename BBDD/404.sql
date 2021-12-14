@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-12-2021 a las 15:00:48
+-- Tiempo de generación: 14-12-2021 a las 15:25:16
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.12
 
@@ -35,6 +35,14 @@ CREATE TABLE `answers` (
   `question_id` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `answers`
+--
+
+INSERT INTO `answers` (`answer_id`, `a_body`, `user_email`, `a_date`, `question_id`) VALUES
+(1, 'La propiedad position sirve para posicionar un elemento dentro de la página. Sin embargo,\r\ndependiendo de cual sea la propiedad que usemos, el elemento tomará una referencia u otra\r\npara posicionarse respecto a ella.\r\nLos posibles valores que puede adoptar la propiedad position son: static | relative | absolute |\r\nfixed | inherit | initial.\r\n', 'lucas@404.es', '2021-12-14', 1),
+(2, 'La pseudoclase :nth-child() selecciona los hermanos que cumplan cierta condición definida en\r\nla fórmula an + b. a y b deben ser números enteros, n es un contador. El grupo an representa\r\nun ciclo, cada cuantos elementos se repite; b indica desde donde empezamos a contar.\r\n', 'emy@404.es', '2021-12-15', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -48,6 +56,17 @@ CREATE TABLE `questions` (
   `user_email` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `questions`
+--
+
+INSERT INTO `questions` (`question_id`, `title`, `q_body`, `user_email`) VALUES
+(1, '¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?', 'Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé\r\nque estas propiedades de CSS sirven para posicionar un elemento dentro de la página.\r\n', 'nico@404.es'),
+(2, '¿Cómo funciona exactamente nth-child?', 'No acabo de comprender muy bien que hace exactamente y qué usos prácticos puede tener', 'roberto@404.es'),
+(3, 'Diferencias entre == y === (comparaciones en JavaScript)', 'Siempre he visto que en JavaScript hay:\r\nasignaciones =\r\ncomparaciones == y ===\r\nCreo entender que == hace algo parecido a comparar el valor de la variable y el === también\r\ncompara el tipo (como un equals de java).', 'sfg@404.es'),
+(4, 'Problema con asincronismo en Node', 'Soy nueva en Node... Tengo una modulo que conecta a una BD de postgres por medio de pgnode. En eso no tengo problemas. Mi problema es que al llamar a ese modulo, desde otro\r\nmodulo, y despues querer usar los datos que salieron de la BD me dice undefined... Estoy casi\r\nseguro que es porque la conexion a la BD devuelve una promesa, y los datos no estan\r\ndisponibles al momento de usarlos.', 'marta@404.es'),
+(5, '¿Qué es la inyección SQL y cómo puedo evitarla?\r\n', 'He encontrado bastantes preguntas en StackOverflow sobre programas o formularios web que\r\nguardan información en una base de datos (especialmente en PHP y MySQL) y que contienen\r\ngraves problemas de seguridad relacionados principalmente con la inyección SQL.\r\nNormalmente dejo un comentario y/o un enlace a una referencia externa, pero un comentario\r\nno da mucho espacio para mucho y sería positivo que hubiera una referencia interna en SOes\r\nsobre el tema así que decidí escribir esta pregunta.', 'lucas@404.es');
+
 -- --------------------------------------------------------
 
 --
@@ -57,6 +76,19 @@ CREATE TABLE `questions` (
 CREATE TABLE `tags` (
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tags`
+--
+
+INSERT INTO `tags` (`name`) VALUES
+('css'),
+('css3'),
+('html'),
+('JavaScript'),
+('mysql'),
+('nodejs'),
+('sql');
 
 -- --------------------------------------------------------
 
@@ -70,6 +102,20 @@ CREATE TABLE `tags_questions` (
   `question_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `tags_questions`
+--
+
+INSERT INTO `tags_questions` (`tag_question_id`, `tag_name`, `question_id`) VALUES
+(1, 'css', 1),
+(2, 'css3', 1),
+(3, 'css', 2),
+(4, 'html', 2),
+(5, 'JavaScript', 3),
+(6, 'nodejs', 4),
+(7, 'mysql', 5),
+(8, 'sql', 5);
+
 -- --------------------------------------------------------
 
 --
@@ -79,8 +125,21 @@ CREATE TABLE `tags_questions` (
 CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
-  `name` varchar(100) NOT NULL
+  `name` varchar(100) NOT NULL,
+  `user_img` varchar(1000) NOT NULL DEFAULT '../img/defecto1.png'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`email`, `password`, `name`, `user_img`) VALUES
+('emy@404.es', '1234', 'Emy', '../img/defecto3.png'),
+('lucas@404.es', '1234', 'Marta', '../img/defecto3.png'),
+('marta@404.es', '1234', 'Marta', '../img/defecto2.png'),
+('nico@404.es', '1234', 'Nico', '../img/defecto1.png'),
+('roberto@404.es', '1234', 'Roberto', '../img/defecto1.png'),
+('sfg@404.es', '1234', 'SFG', '../img/defecto2.png');
 
 --
 -- Índices para tablas volcadas
@@ -129,19 +188,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tags_questions`
 --
 ALTER TABLE `tags_questions`
-  MODIFY `tag_question_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `tag_question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
