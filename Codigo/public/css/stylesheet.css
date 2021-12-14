@@ -1,17 +1,17 @@
 body{
     background-image: url(../img/fondo.jpg); 
     background-size: cover; height: 100vh;
+    padding-top: 1px;
 }
 .user_img{
-    max-height: 10em;
-    border-radius: 30%;
-}
-.titulo_consulta{
-    font-size: 1.5em;
-    color: rgb(10, 61, 10);
+    max-height: 8em;
+    border-radius: 50%;
 }
 label{
     color: rgb(2, 114, 35);
+}
+.texto{
+    color: rgb(21, 209, 77);
 }
 .h5{
     color: rgb(14, 58, 27);

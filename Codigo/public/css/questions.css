@@ -1,0 +1,70 @@
+.question_img{
+    max-height: 30%;
+    max-width: 30%;
+    border-radius: 50%;
+}
+.titulo_consulta{
+    font-size: 2em;
+    color: rgb(15, 90, 15);
+}
+.texto-tag{
+    font-size: 0.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgb(71, 199, 110);
+    white-space: nowrap;
+}
+.question_number{
+    font-size: 1.2em;
+    color: rgb(2, 114, 35);
+}
+.question_formulateBtn{
+    width: 30%;
+    font-size: 1em;
+   
+}
+.question_title{
+    font-size: 1.2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.question_body{
+   
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+.question_nombre{
+    font-size: 1.2em;
+    color: rgb(15, 90, 15);
+}
+.question_date{
+    color: rgb(60, 112, 60);
+}
+.gradient-custom {
+    border-radius: 25px;
+    /* fallback for old browsers */
+    background: #43e97b;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to top, rgba(67, 233, 123, 1), rgba(84, 239, 67, 1));
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to top, rgba(67, 233, 123, 1), rgba(84, 239, 67, 1))
+}
+.gradient-custom2 {
+    border-radius: 25px;
+    /* fallback for old browsers */
+    background: #43e97b;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to top, rgba(67, 233, 123, 1), rgba(255, 255, 255, 1));
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to top, rgba(67, 233, 123, 1), rgba(255, 255, 255, 1))
+}
