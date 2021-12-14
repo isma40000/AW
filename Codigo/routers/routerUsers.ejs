@@ -6,12 +6,12 @@ const routerUser = express.Router();
 const controllerUser = require("../controllers/controllerUser");
 const controllerU = new controllerUser();
 
-routerEmpleados.post("/login", controllerU.login);
+routerUser.post("/login", controllerU.login);
 
-routerEmpleados.get("/", controllerU.identificacionRequerida, controllerU.page_Main);
+routerUser.get("/", controllerU.identificacionRequerida, controllerU.page_Main);
 
-routerEmpleados.get("/registerUser", controllerU.identificacionRequerida, controllerU.registerUser)
+routerUser.get("/registerUser", controllerU.identificacionRequerida, controllerU.registerUser)
 
-routerEmpleados.post("/newUser", controllerU.identificacionRequerida, controllerU.newUser)
+routerUser.post("/newUser", controllerU.identificacionRequerida, controllerU.newUser)
 
 module.exports = routerUser;
