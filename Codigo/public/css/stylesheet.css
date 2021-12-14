@@ -2,3 +2,14 @@ body{
     background-image: url(../img/fondo.jpg); 
     background-size: cover; height: 100vh;
 }
+.user_img{
+    max-height: 10em;
+    border-radius: 30%;
+}
+.titulo_consulta{
+    font-size: 1.5em;
+    color: rgb(10, 61, 10);
+}
+label{
+    color: rgb(2, 114, 35);
+}
