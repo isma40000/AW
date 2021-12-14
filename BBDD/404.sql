@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-12-2021 a las 18:27:20
--- Versión del servidor: 10.4.18-MariaDB
--- Versión de PHP: 8.0.3
+-- Tiempo de generación: 14-12-2021 a las 15:00:48
+-- Versión del servidor: 10.4.21-MariaDB
+-- Versión de PHP: 8.0.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -90,13 +90,16 @@ CREATE TABLE `users` (
 -- Indices de la tabla `answers`
 --
 ALTER TABLE `answers`
-  ADD PRIMARY KEY (`answer_id`);
+  ADD PRIMARY KEY (`answer_id`),
+  ADD KEY `question_id_FK_a` (`question_id`),
+  ADD KEY `user_email_FK_a` (`user_email`);
 
 --
 -- Indices de la tabla `questions`
 --
 ALTER TABLE `questions`
-  ADD PRIMARY KEY (`question_id`);
+  ADD PRIMARY KEY (`question_id`),
+  ADD KEY `user_email_FK_q` (`user_email`);
 
 --
 -- Indices de la tabla `tags`
@@ -108,7 +111,9 @@ ALTER TABLE `tags`
 -- Indices de la tabla `tags_questions`
 --
 ALTER TABLE `tags_questions`
-  ADD PRIMARY KEY (`tag_question_id`);
+  ADD PRIMARY KEY (`tag_question_id`),
+  ADD KEY `question_id_FK_tq` (`question_id`),
+  ADD KEY `tag_name_FK_tq` (`tag_name`);
 
 --
 -- Indices de la tabla `users`
@@ -137,6 +142,30 @@ ALTER TABLE `questions`
 --
 ALTER TABLE `tags_questions`
   MODIFY `tag_question_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `answers`
+--
+ALTER TABLE `answers`
+  ADD CONSTRAINT `question_id_FK_a` FOREIGN KEY (`question_id`) REFERENCES `questions` (`question_id`),
+  ADD CONSTRAINT `user_email_FK_a` FOREIGN KEY (`user_email`) REFERENCES `users` (`email`);
+
+--
+-- Filtros para la tabla `questions`
+--
+ALTER TABLE `questions`
+  ADD CONSTRAINT `user_email_FK_q` FOREIGN KEY (`user_email`) REFERENCES `users` (`email`);
+
+--
+-- Filtros para la tabla `tags_questions`
+--
+ALTER TABLE `tags_questions`
+  ADD CONSTRAINT `question_id_FK_tq` FOREIGN KEY (`question_id`) REFERENCES `questions` (`question_id`),
+  ADD CONSTRAINT `tag_name_FK_tq` FOREIGN KEY (`tag_name`) REFERENCES `tags` (`name`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
