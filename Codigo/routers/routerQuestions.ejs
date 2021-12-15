@@ -24,7 +24,7 @@ questionsRouter.get("/respuestas/dislike/:idQ/:idA", controller.scoreAnswer);
 questionsRouter.post("/createQuestion", controller.createQuestion);
 questionsRouter.post("/publicarRespuesta/:id", controller.postAnswer);
 
-/*questionsRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-questionsRouter.use(middlewares.middlewareServerError); // middleware ERROR 500   */
+questionsRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
+questionsRouter.use(middlewares.middlewareServerError); // middleware ERROR 500   
 
 module.exports = questionsRouter;
