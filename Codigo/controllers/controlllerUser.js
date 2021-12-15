@@ -1,157 +1,109 @@
 "use strict";
 
-const config = require("../config");
-const mysql = require("mysql");
-const pool = mysql.createPool(config.mysqlConfig);
-const modelUser = require("../models/modelUser");
-const modelU = new modelUser(pool);
+const DUsers  = require('../models/modelUsers'); // DUsers
+const pool      = require("../database");
+let dao         = new DUsers(pool);
 
-class controllerUser 
-{
-    identificacionRequerida(request, response, next) 
-    {
-        if (request.session.currentUser !== undefined &&  request.session.currentId !== undefined ) {
-            response.locals.userEmail = request.session.currentUser;
-            response.locals.userId = request.session.currentId;
-            next();
-        } else 
-        {
-            response.redirect("/login");
-        }
-    }
-    login(request, response) {
-        modelU.isUserCorrect(request.body.email, request.body.password, cb_isUserCorrect);
-
-        //result1 para comprobar email y password OK
-        //result2 para comprobar usuario activo
-        function cb_isUserCorrect(err, result1, result2, rows) {
-            if (err) {
-                next(err);
-            } else {
-                if (!result1) {
-                    response.status(200);
-                    response.render("login", {errorMsg: "Email y/o contraseña no válidos"});
-                } else if (!result2) {
-                    response.status(200);
-                    response.render("login", {errorMsg: "Usuario no activo"});
-                } else {
-                    response.status(200);
-                    request.session.currentUser = request.body.email;
-                    response.locals.userEmail = request.body.email;
-                    request.session.currentId = rows.id;
-                    response.locals.userId = request.session.currentId;
-
-                    console.log(response.locals.userType);
-                    response.render("principal", {msg: null, name: rows.name});
-                }
+module.exports = {
+    // Ruta: /usuarios/
+    getAllUsers : function(request, response){
+        dao.readAllUsers(function(error, allUsers){
+            if(error){
+                response.status(500);
+                response.render("error_500");
+            } else{
+                response.render("users", { users: allUsers, title: 'Usuarios' });
             }
-        }
-    }
+        });
+    },
 
-    registrarEmpleados(request, response) {
-        response.status(200);
-        response.render("registrar_empleado", {errorMsg: null});
-    }
-
-    pagina_empleado(request, response) {
-        response.status(200);
-        response.render("pagina_empleado");
-    }
-
-    nuevoEmpleado(request, response) {
-        let nombre = request.body.nombre;
-        let email = request.body.email;
-        let passw1 = request.body.passw1;
-        let passw2 = request.body.passw2;
-
-        var emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
-
-        if (emailRegex.test(email)) {
-            let hasNumNombre = /\d/.test(nombre);
-            if (hasNumNombre) {
-                response.render("registrar_user", {errorMsg: "Error relacionado con el nombre"});
+    // Ruta: /usuarios/filtrar por nombre de usuario
+    findByFilter: function(request, response){
+        dao.findByFilter(`%${request.query.filtro}%`, function(error, users){
+            if(error){
+                response.status(500);
+                response.render("error_500");
+            } else{
+                response.render("users", { users: users, title: `Usuarios filtrados por ["${request.query.filtro}"]` });
             }
-            else{
-              
-                     
-                            if (passw1 !== passw2) {
-                                response.render("registrar_user", {errorMsg: "La contraseña de verificación no coincide"});
-                            } else {
-                                if (passw1.length < 6) {
-                                    response.render("registrar_user", {errorMsg: "La contraseña no tiene la longitud necesaria"});
-                                }
-                                else {
-                                    modelU.isUserExist(email, cb_isUserExist);
+        });
+    },
 
-                                    function cb_isUserExist(err, result) {
-                                        if (err) {
-                                            response.status(500);
-                                            response.render("registrar_user", {errorMsg: err.message});
-                                        } else {
-                                            if (!result) { //si no existia ese email en la BD
-                                                modelU.insertEmpleado(email,nombre, passw1, cb_insertUser);
+    // Ruta: /usuarios/perfil/:id para obtener el perfil de un usuario
+    findByID: function(request, response){
+        dao.findByID(request.params.id, function(error, data){
+            if(error){
+                response.status(500);
+                response.render("error_500");
+            } else{
+                response.render("profile", { user: data.user/*, medals: data.medals */});
+            }
+        });
+    },
+    //FUNCIONES RELACIONADAS CON EL LOGIN
+    
+    // Ruta: /loginout/registro
+    getRegisterRedirect: function(request, response){
+        response.render("register", { errorMsg : null });
+    },
 
-                                                function cb_insertUser(err1, result1) {
-                                                    if (err1) {
-                                                        response.status(500);
-                                                        response.render("registrar_user", {errorMsg: err1.message});
-                                                    } else {
-                                                        if (!result1) {
-                                                            response.status(200);
-                                                            response.render("registrar_user", {errorMsg: "Error, inserta de nuevo"});
-                                                        } else {
-                                                            response.status(200);
-                                                            response.render("principal", {msg: "Usuario insertado correctamente"});
-                                                        }
-                                                    }
-                                                }
-                                            } else {
-                                                response.render("registrar_user", {errorMsg: "Email ya existe"});
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+    // Ruta: /loginout/login
+    getLoginRedirect: function(request, response){
+        response.render("login", { errorMsg : null });
+    },
+
+    // Ruta: POST a la bbdd del register
+    registerUser: function(request, response){
+        let data = {
+            email       : request.body.email,
+            name    : request.body.name,
+            password    : request.body.password,
+            password_c  : request.body.password_confirm,
+            profileImg  : request.file
+        };
+        if(data.profileImg){
+            data.profileImg = data.profileImg.filename // nombre del fichero, luego para obtener las imgs se hace a traves de /imagen/:id
+        }
+    
+        if(data.password === data.password_c){
+            if(data.name === '' || data.email === '' || data.password === '' || data.password_c === ''){
+                response.render("register", { errorMsg : 'Rellena todos los campos obligatorios marcados con *' });
+            } else{
+                daoUsers.createUser(data, function (error) {
+                    if (error) {
+                        response.status(500);
+                        response.render("error_500");
+                    } else {
+                        response.redirect("/loginout/login");
                     }
-                    
-                }
-            
-        
-    
-    
+                });
+            }
+        } else{
+            response.render("register", { errorMsg : 'Las contraseñas no coinciden.' });
+        }
+    },
+
+    // Ruta: POST a la bbdd para iniciar la sesion
+    loginUser: function(request, response){
+        daoUsers.isUserCorrect(request.body.email, request.body.password, function(error, user){
+            if(error){
+                response.status(500);
+                response.render("error_500");
+            } else if(user !== null){
+                request.session.currentName     = user.name;
+                request.session.currentEmail    = user.email;
+                request.session.currentID       = user.id;
+                request.session.currentImg      = user.profileImg;
+                response.redirect("/index");
+            } else{
+                response.render("login", { errorMsg : "Dirección de correo electrónico y/o contraseña no válidos" });
+            }
+        });
+    },
+
+    // Ruta: POST /loginout/logoutUser
+    logoutUser: function(request, response){
+        request.session.destroy();
+        response.redirect("/loginout/login");
     }
-    module.exports = controllerUser;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};

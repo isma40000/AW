@@ -2,17 +2,31 @@
 
 //----------------------------TODOS LOS "require"s-------------------------//
 //LOS FAVICONS, MORGAN Y TAL SEGURAMENTE TENDRAMOS QUE CAMBIARLO
-const config = require("./config");
-const path = require("path");
-const express = require("express");
-const favicon = require("serve-favicon");
-const morgan = require("morgan");//
-const bodyParser = require("body-parser");
-const routerUsers = require("./routers/routerUsers");
-const routerQuestions = require("./routers/routerQuestions");
-//const routerVehiculos = require("./routers/routerVehiculos");
-const session = require("express-session");
-const mysqlSession = require("express-mysql-session");
+const middlewares       = require('./middlewares');
+const bodyParser        = require('body-parser');
+const express           = require('express');
+const path              = require('path');
+const morgan            = require('morgan');
+const staticFiles       = path.join(__dirname, "public");
+const usersRouter       = require("./routers/routerUsers");
+const questionsRouter   = require('./routers/routerQuestions');
+const session           = require('express-session');
+const mysqlSession      = require('express-mysql-session');
+const config            = require('./config');
+const MySQLStore        = mysqlSession(session);
+
+const sessionStore      = new MySQLStore({
+    host        : config.mysqlConfig.host,
+    user        : config.mysqlConfig.user,
+    password    : config.mysqlConfig.password,
+    database    : config.mysqlConfig.database
+});
+const middlewareSession = session({
+    saveUninitialized   : false,
+    secret              : "SergioIsma",
+    resave              : false,
+    store               : sessionStore 
+});
 
 //-----------------------------------APP------------------------------------//
 
@@ -50,33 +64,27 @@ app.use(function(request, response, next) {
 //--------------------------------- RUTAS ----------------------------------//
 app.use("/users", routerUsers);
 app.use("/questions", routerQuestions);
-//app.use("/vehiculos", routerVehiculos);
-
-//----------------------------------LOGIN-----------------------------------//
-
-app.get("/", function (request, response) {
-    response.status(200);
-    response.redirect("/login");
+//---------------------------------MANEJADORES DE RUTAS ----------------------------------//
+app.get("/", (request, response) => {
+    response.redirect("/U_index");
 });
 
-app.get("/login", function (request, response) {
-    response.status(200);
-    response.render("login", { errorMsg: null });
+app.get("/U_index", middlewares.checkSession, (request, response) => {
+    response.render("U_index");
 });
 
-app.get("/principal", function (request, response) {
-    response.status(200);
-    console.log(request.session.currentType);
-    response.render("principal",{msg: null, name: null, userType: request.session.currentType});
+app.get("/imagen/:id", middlewares.checkSession, function(request, response){
+    response.sendFile(path.join(__dirname, "./public/img", request.params.id));
 });
 
-//----------------------------------LOGOUT-----------------------------------//
-
-app.get("/logout", function (request, response) {
-    response.status(200);
-    request.session.destroy();
-    response.render("login", { errorMsg: null });
+app.listen(config.port, function(error) {
+    if (error) {
+        console.error("No se pudo inicializar el servidor: " + error.message);
+    } else {
+        console.log(`Servidor arrancado en el puerto ${config.port}`);
+    }
 });
+
 
 
 //------------------------------ERRORMIDDLEWARE------------------------------//
