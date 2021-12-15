@@ -7,14 +7,14 @@ const pool          = require("../database");
 let dao             = new DAOQuestions(pool);
 
 module.exports = {
-    // Ruta: /preguntas/
+    // Ruta: /questions/
     getAllQuestions : function(request, response){
         dao.readQuestions(function(error, data){
             if(error){
                 response.status(500);
                 response.render("error500");
             } else{
-                response.render("questions", { questions: data.questions, n_questions: data.totalQuestions, title: 'Todas las preguntas' });
+                response.render("page_QuestionsAll", { questions: data.questions, n_questions: data.totalQuestions, title: 'Todas las preguntas' });
             }
         });
     },
@@ -26,7 +26,7 @@ module.exports = {
                 response.status(500);
                 response.render("error500");
             } else{
-                response.render("questions", { questions: data.questions, n_questions: data.totalQuestions, title: `Resultados de la búsqueda "${request.query.desiredText}"` });
+                response.render("page_QuestionsAll", { questions: data.questions, n_questions: data.totalQuestions, title: `Resultados de la búsqueda "${request.query.desiredText}"` });
             }
         });
     },
@@ -38,7 +38,7 @@ module.exports = {
                 response.status(500);
                 response.render("error500");
             } else{
-                response.render("questions", { questions: data.questions, n_questions: data.totalQuestions, title: `Preguntas con la etiqueta [${request.params.label}]` });
+                response.render("page_QuestionsAll", { questions: data.questions, n_questions: data.totalQuestions, title: `Preguntas con la etiqueta [${request.params.label}]` });
             }
         });
     },
@@ -88,7 +88,7 @@ module.exports = {
         }
     },
 
-    // Ruta: /preguntas/:id vista especifica de cada pregunta
+    // Ruta: /questions/:id vista especifica de cada pregunta
     getQuestion: function (request, response){
         dao.filterQuestionByID({ question : request.params.id, user : request.session.currentEmail }, function(error, qData){
             if(error){
@@ -113,7 +113,7 @@ module.exports = {
                 response.status(500);
                 response.render("error500");
             } else{
-                response.redirect("/preguntas");
+                response.redirect("/questions");
             }
         });
     },
@@ -125,7 +125,7 @@ module.exports = {
                 response.status(500);
                 response.render("error500");
             } else{
-                response.render("questions", { questions: data.questions, total: data.questions.length, title: "Preguntas sin responder" });
+                response.render("page_QuestionsAll", { questions: data.questions, total: data.questions.length, title: "Preguntas sin responder" });
             }
         });
     },
