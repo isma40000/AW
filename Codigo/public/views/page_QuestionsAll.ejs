@@ -9,44 +9,16 @@
 </head>
 
 <body>
-    <div class="container-fluid" >
-        <div class="row justify-content-between">
-            <div class= "col-2">
-                <div class="row justify-content-center pt-5">
-                    <button type="button" class="btn btn-dark btn-sm ml-1 text-light" style="width: 80%;">Preguntas</button>
-                </div>
-                <div class="row justify-content-center pt-4">
-                    <button type="button" class="btn btn-dark btn-sm ml-1 text-light" style="width: 80%;">Sin responder</button>
-                </div>
-                <div class="row justify-content-center pt-4">
-                    <button type="button" class="btn btn-dark btn-sm ml-1 text-light" style="width: 80%;">Usuarios</button>
-                </div>
-            </div>
-            <div class= "col-2 text-center">
-                <div>
-                    <img src="../img/kuroko.png" class="img-fluid user_img pt-4" alt="Responsive image">
-                    <button type="button" class="btn btn-dark btn-sm my-4 text-light"style="width: 70%;">Cerrar Sesión</button>
-                </div>
-            </div>
-        </div>
-        <form class="row justify-content-center">
-            <div class="col-1 text-end">
-                <button type="submit" class="btn btn-dark btn-sm" style="width: 70%;">Buscar</button>
-            </div>
-            <div class="col-11">
-                <input type="text" class="form-control" style="width: 90%;" id="inlineFormInputSearch" placeholder="Buscar por título/cuerpo de pregunta"> 
-            </div>
-        </form>
-    </div>
+    <%- include('header') %>
     <div class="container-fluid  h-100" style="margin-top: 1em;">
         <div class="row justify-content-center mb-3 titulo_consulta">
-            Todas las preguntas
+            <%= title %>
         </div>
         <div class="row justify-content-center mb-3 ">
             <div class="col-6">
                 <div class="row justify-content-between">
-                    <div class="col-3 question_number">
-                        5 preguntas
+                    <div class="col-6 question_number">
+                        <%= n_questions %> preguntas
                     </div>
                     <button type="button" class="btn btn-dark btn-sm col-4 question_formulateBtn">
                         Formular una pregunta
@@ -56,152 +28,35 @@
             
         </div>
         <div class="row justify-content-center">
-            <div class="col-8 gradient-custom2">
-                <div class="row border border-success bg-light rounded justify-content-center m-3">
-                    <div class="col-8 justify-content-center">
-                        <label class="row rounded-top">
-                            <div class="ml-2 mt-2 question_title">¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?</div>
-                        </label>
-                        <label class="row texto">
-                            <div class="ml-2 mt-1 mb-2 question_body">
-                                Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé
-                                que estas propiedades de CSS sirven para posicionar un elemento dentro de la página.
+            <div class="col-8 border border-dark gradient-custom2">
+                <% questions.forEach(function(question){ %>
+                    <div class="row border border-success bg-light rounded justify-content-center m-3">
+                        <div class="col-8 justify-content-center">
+                            <label class="row rounded-top">
+                                <div class="ml-2 mt-2 question_title"><%= question.title %></div>
+                            </label>
+                            <label class="row texto">
+                                <div class="ml-2 mt-1 mb-2 question_body"><%= question.body></div>
+                            </label>
+                            <div class="row justify-content-start">
+                                <% question.tags.forEach(function(tag){ %>
+                                    <a href="/preguntas/etiquetas/<%= tag %>" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag" title="<%= tag %>"><%= tag %></a>
+                                <% }); %>
                             </div>
-                        </label>
-                        <div class="row justify-content-start">
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag" title="hey">hey</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag" title="javascript">javascript</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag" title="css3">css3</button>
                         </div>
-                    </div>
-                    <div class="col-4 justify-content-center rounded bg-light">
-                        <label class="row text-center">
-                            <div class="question_date mt-4">Formulada el 5/11/2020</div>
-                        </label>
-                        <div class="row justify-content-center">
-                            <img src="../img/defecto1.png" class="img-fluid my-3 question_img" alt="Responsive image">
-                        </div>
-                        <label class="row text-center">
-                            <div class="question_nombre mb-2">Nico</div>
-                        </label>
-                    </div>
-                </div><!-- row 1 -->
-                <div class="row border border-success bg-light rounded justify-content-center m-3">
-                    <div class="col-8 justify-content-center">
-                        <label class="row rounded-top">
-                            <div class="ml-2 mt-2 question_title">¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?</div>
-                        </label>
-                        <label class="row texto">
-                            <div class="ml-2 mt-1 mb-2 question_body">
-                                Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé
-                                que estas propiedades de CSS sirven para posicionar un elemento dentro de la página.
+                        <div class="col-4 justify-content-center rounded bg-light">
+                            <label class="row text-center">
+                                <div class="question_date mt-4">Formulada el <%= question.date %></div>
+                            </label>
+                            <div class="row justify-content-center">
+                                <img src="<%= question.userImg %>" class="img-fluid my-3 question_img" alt="Responsive image">
                             </div>
-                        </label>
-                        <div class="row justify-content-start">
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">hey</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">javascript</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">css3</button>
+                            <label class="row text-center">
+                                <div class="question_nombre mb-2"><%= question.username %></div>
+                            </label>
                         </div>
-                    </div>
-                    <div class="col-4 justify-content-center rounded bg-light">
-                        <label class="row text-center">
-                            <div class="question_date mt-4">Formulada el 5/11/2020</div>
-                        </label>
-                        <div class="row justify-content-center">
-                            <img src="../img/defecto1.png" class="img-fluid my-3 question_img" alt="Responsive image">
-                        </div>
-                        <label class="row text-center">
-                            <div class="question_nombre mb-2">Nico</div>
-                        </label>
-                    </div>
-                </div><!-- row 2 -->
-                <div class="row border border-success bg-light rounded justify-content-center m-3">
-                    <div class="col-8 justify-content-center">
-                        <label class="row rounded-top">
-                            <div class="ml-2 mt-2 question_title">¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?</div>
-                        </label>
-                        <label class="row texto">
-                            <div class="ml-2 mt-1 mb-2 question_body">
-                                Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé
-                                que estas propiedades de CSS sirven para posicionar un elemento dentro de la página.
-                            </div>
-                        </label>
-                        <div class="row justify-content-start">
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">hey</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">javascript</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">css3</button>
-                        </div>
-                    </div>
-                    <div class="col-4 justify-content-center rounded bg-light">
-                        <label class="row text-center">
-                            <div class="question_date mt-4">Formulada el 5/11/2020</div>
-                        </label>
-                        <div class="row justify-content-center">
-                            <img src="../img/defecto1.png" class="img-fluid my-3 question_img" alt="Responsive image">
-                        </div>
-                        <label class="row text-center">
-                            <div class="question_nombre mb-2">Nico</div>
-                        </label>
-                    </div>
-                </div><!-- row 3 -->
-                <div class="row border border-success bg-light rounded justify-content-center m-3">
-                    <div class="col-8 justify-content-center">
-                        <label class="row rounded-top">
-                            <div class="ml-2 mt-2 question_title">¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?</div>
-                        </label>
-                        <label class="row texto">
-                            <div class="ml-2 mt-1 mb-2 question_body">
-                                Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé
-                                que estas propiedades de CSS sirven para posicionar un elemento dentro de la página.
-                            </div>
-                        </label>
-                        <div class="row justify-content-start">
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">hey</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">javascript</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">css3</button>
-                        </div>
-                    </div>
-                    <div class="col-4 justify-content-center rounded bg-light">
-                        <label class="row text-center">
-                            <div class="question_date mt-4">Formulada el 5/11/2020</div>
-                        </label>
-                        <div class="row justify-content-center">
-                            <img src="../img/defecto1.png" class="img-fluid my-3 question_img" alt="Responsive image">
-                        </div>
-                        <label class="row text-center">
-                            <div class="question_nombre mb-2">Nico</div>
-                        </label>
-                    </div>
-                </div><!-- row 4 -->
-                <div class="row border border-success bg-light rounded justify-content-center m-3">
-                    <div class="col-8 justify-content-center">
-                        <label class="row rounded-top">
-                            <div class="ml-2 mt-2 question_title">¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?</div>
-                        </label>
-                        <label class="row texto">
-                            <div class="ml-2 mt-1 mb-2 question_body">
-                                Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé
-                                que estas propiedades de CSS sirven para posicionar un elemento dentro de la página.
-                            </div>
-                        </label>
-                        <div class="row justify-content-start">
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">hey</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">javascript</button>
-                            <button type="button" class=" btn btn-sm btn-dark m-2 mt-1 texto-tag">css3</button>
-                        </div>
-                    </div>
-                    <div class="col-4 justify-content-center rounded bg-light">
-                        <label class="row text-center">
-                            <div class="question_date mt-4">Formulada el 5/11/2020</div>
-                        </label>
-                        <div class="row justify-content-center">
-                            <img src="../img/defecto1.png" class="img-fluid my-3 question_img" alt="Responsive image">
-                        </div>
-                        <label class="row text-center">
-                            <div class="question_nombre mb-2">Nico</div>
-                        </label>
-                    </div>
-                </div><!-- row 5 -->
+                    </div><!-- row responsive -->
+                <% }); %>
             </div><!-- columna -->
         </div>
     </div>

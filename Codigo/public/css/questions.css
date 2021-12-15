@@ -58,14 +58,3 @@
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to top, rgba(67, 233, 123, 1), rgba(84, 239, 67, 1))
 }
-.gradient-custom2 {
-    border-radius: 25px;
-    /* fallback for old browsers */
-    background: #43e97b;
-  
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to top, rgba(67, 233, 123, 1), rgba(255, 255, 255, 1));
-  
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to top, rgba(67, 233, 123, 1), rgba(255, 255, 255, 1))
-}
