@@ -8,21 +8,21 @@ const bodyParser        = require('body-parser');
 
 // middleware
 questionsRouter.use(bodyParser.urlencoded({ extended: false }));
-questionsRouter.use(middlewares.checkSession);
+questionsRouter.use(middlewares.loggedCheck);
 
-// Vistas y forms/acciones de las vistas
+// Vistas
 questionsRouter.get("/", controller.getAllQuestions);
-questionsRouter.get("/etiquetas/:label", controller.findByTag);
-questionsRouter.get("/formular", controller.formulate);
-questionsRouter.get("/buscar", controller.findByFilter);
+questionsRouter.get("/tag/:label", controller.findByTag);
+questionsRouter.get("/create", controller.create);
+questionsRouter.get("/search", controller.findByText);
 questionsRouter.get("/:id", controller.getQuestion);
-questionsRouter.post("/formulateQuestion", controller.formulateQuestion);
-questionsRouter.post("/publicarRespuesta/:id", controller.postAnswer);
-questionsRouter.get("/like/:id", controller.scoreQuestion);
-questionsRouter.get("/dislike/:id", controller.scoreQuestion);
-questionsRouter.get("/descargar/sinresponder", controller.noAnswers);
+questionsRouter.get("/notAnswered", controller.getNotAnswered);
 questionsRouter.get("/respuestas/like/:idQ/:idA", controller.scoreAnswer);
 questionsRouter.get("/respuestas/dislike/:idQ/:idA", controller.scoreAnswer);
+
+//Acciones de las vistas
+questionsRouter.post("/createQuestion", controller.createQuestion);
+questionsRouter.post("/publicarRespuesta/:id", controller.postAnswer);
 
 /*questionsRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
 questionsRouter.use(middlewares.middlewareServerError); // middleware ERROR 500   */

@@ -14,7 +14,6 @@ const session           = require('express-session');
 const mysqlSession      = require('express-mysql-session');
 const config            = require('./config');
 const MySQLStore        = mysqlSession(session);
-
 const sessionStore      = new MySQLStore({
     host        : config.mysqlConfig.host,
     user        : config.mysqlConfig.user,
@@ -32,7 +31,7 @@ const middlewareSession = session({
 
 const app = express();
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "./views"));
 
 // Recursos estaticos
 //LOS FAVICONS, MORGAN Y TAL SEGURAMENTE TENDRAMOS QUE CAMBIARLO
@@ -45,15 +44,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //----------------------------------SESSION---------------------------------//
 
-const MySQLStore = mysqlSession(session);
-const sessionStore = new MySQLStore(config.mysqlConfig);
+// const MySQLStore = mysqlSession(session);
+// const sessionStore = new MySQLStore(config.mysqlConfig);
 
-const middlewareSession = session({
-    saveUninitialized: true,
-    secret: "foobar34",
-    resave: false,
-    store: sessionStore
-});
+// const middlewareSession = session({
+//     saveUninitialized: true,
+//     secret: "foobar34",
+//     resave: false,
+//     store: sessionStore
+// });
 app.use(middlewareSession);
 
 app.use(function(request, response, next) {
@@ -84,11 +83,19 @@ app.listen(config.port, function(error) {
         console.log(`Servidor arrancado en el puerto ${config.port}`);
     }
 });
-
-
-
+//---------------------------------SERVIDOR---------------------------------//
+app.listen(config.port, function(err) {
+   if (err) {
+       console.log("ERROR al iniciar el servidor");
+   }
+   else {
+       console.log(`Servidor arrancado en el puerto ${config.port}`);
+   }
+});
 //------------------------------ERRORMIDDLEWARE------------------------------//
-
+app.use("/prueba",function(request, response, next) {
+    jauja.__dirname;
+});
 app.use(function(request, response, next) {
     response.status(404);
     response.render("error404", { url: request.url });
@@ -97,15 +104,4 @@ app.use(function(request, response, next) {
 app.use(function(error, request, response, next) {
     response.status(500);
     response.render("error500", {mensaje: error.message, pila: error.stack });
-});
-
-//---------------------------------SERVIDOR---------------------------------//
-
-app.listen(config.port, function(err) {
-   if (err) {
-       console.log("ERROR al iniciar el servidor");
-   }
-   else {
-       console.log(`Servidor arrancado en el puerto ${config.port}`);
-   }
 });

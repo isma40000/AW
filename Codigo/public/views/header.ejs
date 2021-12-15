@@ -14,17 +14,17 @@
             </div>
             <div class= "col-2 text-center">
                 <div>
-                    <img src="<%= userImg %>" class="pt-4 user_img" alt="Foto de perfil">
-                    <button type="button" class="btn btn-dark btn-sm my-4 text-light"style="width: 70%;">Cerrar Sesión</button>
+                    <img src="<%= userImg %>" class="mt-4 user_img" alt="Foto de perfil">
+                    <a href="/users/logoutUser" class="btn btn-dark btn-sm my-4 text-light"style="width: 70%;">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
-        <form class="row justify-content-center">
+        <form action="/questions/search" method="GET" class="row justify-content-center mt-2">
             <div class="col-1 text-end">
                 <button type="submit" class="btn btn-dark btn-sm" style="width: 70%;">Buscar</button>
             </div>
             <div class="col-11">
-                <input type="text" class="form-control" style="width: 90%;" id="inlineFormInputSearch" placeholder="Buscar por título/cuerpo de pregunta"> 
+                <input type="text" class="form-control" style="width: 90%;" name="desiredText" placeholder="Buscar por título/cuerpo de pregunta"> 
             </div>
         </form>
     </div>

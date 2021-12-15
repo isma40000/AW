@@ -12,18 +12,35 @@ body{
     background: linear-gradient(to top,rgba(67, 233, 123, 1)  10%,rgba(255, 255, 255, 1));
     min-height:100vh;
 }
-.user_img{
-    max-height: 8em;
-    border-radius: 50%;
+.body_error{
+    /* background-image: url(../img/fondo.jpg);  */
+    /* background-size: cover; height: 100vh; */
+    padding-top: 1px;
+    /* fallback for old browsers */
+    background: #8b2a2a;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to top,rgb(105, 0, 0)  10%,rgba(255, 255, 255, 1));
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to top,rgb(105, 0, 0)  10%,rgba(255, 255, 255, 1));
+    min-height:100vh;
 }
+
 label{
     color: rgb(2, 114, 35);
 }
 .texto{
     color: rgb(21, 209, 77);
 }
+.texto_error{
+    color: rgb(252, 0, 0);
+}
 .h5{
     color: rgb(14, 58, 27);
+}
+.h1_error{
+    color: rgb(75, 0, 0);
 }
 .gradient-custom2 {
     border-radius: 25px;
