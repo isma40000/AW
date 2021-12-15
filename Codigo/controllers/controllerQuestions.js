@@ -9,52 +9,61 @@ let dao             = new DAOQuestions(pool);
 module.exports = {
     // Ruta: /preguntas/
     getAllQuestions : function(request, response){
-        dao.readAllQuestion(function(error, data){
+        dao.readQuestions(function(error, data){
             if(error){
                 response.status(500);
-                response.render("error_500");
+                response.render("error500");
             } else{
                 response.render("questions", { questions: data.questions, total: data.totalQuestions, title: 'Todas las preguntas' });
             }
         });
     },
 
-    // Ruta: GET /preguntas/buscar en el filtro del header
-    findByFilter: function(request, response){
-        dao.findByFilter(`%${request.query.busqueda}%`, function(error, data){
+    // Ruta: GET /questions/search en el filtro del header
+    findByText: function(request, response){
+        dao.filterByText(`%${request.query.busqueda}%`, function(error, data){
             if(error){
                 response.status(500);
-                response.render("error_500");
+                response.render("error500");
             } else{
                 response.render("questions", { questions: data.questions, total: data.totalQuestions, title: `Resultados de la búsqueda "${request.query.busqueda}"` });
             }
         });
     },
 
-    // Ruta: /preguntas/etiquetas/:label
+    // Ruta: /questions/tag/:label
     findByTag: function(request, response){
-        dao.filterQuestionByTag(request.params.label, function(error, data){
+        dao.filterByTag(request.params.label, function(error, data){
             if(error){
                 response.status(500);
-                response.render("error_500");
+                response.render("error500");
             } else{
                 response.render("questions", { questions: data.questions, total: data.totalQuestions, title: `Preguntas con la etiqueta [${request.params.label}]` });
             }
         });
     },
 
-    // Ruta: /preguntas/formular
-    formulate: function(request, response){
-        response.render("formulate", { errorMsg : null });
+    // Ruta: /questions/create
+    create: function(request, response){
+        response.render("page_QuestionsCreate", { errorMsg : null });
     },
 
-    // Ruta: POST /preguntas/createQuestion del FORM para crear la pregunta
-    formulateQuestion: function(request, response){
-        let labels = request.body.labels || '', _aux = [];
-        // labels = labels.split('@').filter(tag => tag != '' && !_aux.includes(tag));
+    // Ruta: POST /questions/createQuestion del FORM para crear la pregunta
+    createQuestion: function(request, response){
+        let labels;
+        let aux = [];
+        if(request.body.labels !== undefined){
+            labels=request.body.labels;
+        }else{labels='';}
+        // labels = request.body.labels || '',
         labels = labels.split('@').filter(function(tag){
-            var check = tag != '' && !_aux.includes(tag);
-            _aux.push(tag);
+            var check;
+            if(tag !== '' && !aux.includes(tag)){
+                check=true;
+            }else{
+                check=false;
+            }
+            aux.push(tag);
             return check;
         });
 
@@ -66,14 +75,14 @@ module.exports = {
         };
 
         if(params.title === "" || params.body === ""){
-            response.render("formulate", { errorMsg : 'Rellena todos los campos obligatorios marcados con *' });
+            response.render("page_QuestionsCreate", { errorMsg : 'Rellena todos los campos obligatorios marcados con *' });
         } else{
             dao.createQuestion(params, function(error){
                 if(error){
                     response.status(500);
-                    response.render("error_500");
+                    response.render("error500");
                 } else{
-                    response.redirect("/preguntas");
+                    response.redirect("/questions");
                 }
             });
         }
@@ -84,78 +93,41 @@ module.exports = {
         dao.filterQuestionByID({ question : request.params.id, user : request.session.currentEmail }, function(error, qData){
             if(error){
                 response.status(500);
-                response.render("error_500");
+                response.render("error500");
             } else{
-                response.render("detailedQuestion", { question: qData.question, answers: qData.answers });
+                response.render("page_QuestionDetails", { question: qData.question, answers: qData.answers });
             }
         });
     },
 
     // Ruta: /preguntas/publicarRespuesta/:id para publicar una respuesta dentro de la vista de una pregunta
-    postAnswer: function(request, response){
+    publishAnswer: function(request, response){
         let params = {
             question    : request.params.id,
             text        : request.body.a_body,
             user        : request.session.currentEmail
         };
         console.log(params);
-        dao.postAnswer(params, function(error){
+        dao.publishAnswer(params, function(error){
             if(error){
                 response.status(500);
-                response.render("error_500");
+                response.render("error500");
             } else{
                 response.redirect("/preguntas");
             }
         });
     },
 
-    // Ruta: /preguntas/like/:id o /preguntas/dislike/:id a una pregunta
-    scoreQuestion: function(request, response){
-        let like = request.originalUrl.split('/')[2] === 'like',
-        params = {
-            type        : like,
-            question    : request.params.id,
-            user        : request.session.currentEmail
-        };
-        dao.scoreQuestion(params, function(error){
+    // Ruta: /questions/notAnswered
+    getNotAnswered: function(request, response){
+        dao.getNotAnswered(function(error, data){
             if(error){
                 response.status(500);
-                response.render("error_500");
-            } else{
-                response.redirect(`/preguntas/${request.params.id}`);
-            }
-        });
-    },
-
-    // Ruta: /usuarios/descargar/sinreponder
-    noAnswers: function(request, response){
-        dao.noAnswers(function(error, data){
-            if(error){
-                response.status(500);
-                response.render("error_500");
+                response.render("error500");
             } else{
                 response.render("questions", { questions: data.questions, total: data.questions.length, title: "Preguntas sin responder" });
             }
         });
     },
-
-    // Ruta: /preguntas/respuestas/like/:idQ/:idA o /preguntas/respuestas/dislike/:id a una pregunta
-    scoreAnswer: function(request, response){
-        let like = request.originalUrl.split('/')[3] === 'like',
-        params = {
-            type        : like,
-            answer      : request.params.idA,
-            currentUser : request.session.currentEmail // usuario de la sesion que da like/dislike
-        };
-        
-        dao.scoreAnswer(params, function(error){
-            if(error){
-                response.status(500);
-                response.render("error_500");
-            } else{
-                response.redirect(`/preguntas/${request.params.idQ}`);
-            }
-        });
-    }
 }
 

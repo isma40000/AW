@@ -57,7 +57,7 @@ class DAOQuestions{
 
     
     // ORDENARLAS CRONOLOGICAMENTE
-    readAllQuestion(callback){
+    readQuestions(callback){
         this.pool.getConnection(function(error, connection){
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
@@ -99,7 +99,7 @@ class DAOQuestions{
         });
     }
 
-    filterQuestionByTag(tagName, callback){
+    filterByTag(tagName, callback){
         this.pool.getConnection(function(error, connection){
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
@@ -142,24 +142,7 @@ class DAOQuestions{
 
     }
 
-    createAnswer(data, callback){
-        this.pool.getConnection(function(error, connection){
-            if(error){
-                callback(new Error("Error de conexion a la base de datos"));
-            } else{
-                connection.query("INSERT INTO `answers`(`user`, `question`) VALUES (?,?)", [ data.email, data.id ] , function(error, result){
-                    connection.release();
-                    if(error){
-                        callback(new Error("Error de acceso a la base de datos"));
-                    } else{
-                        callback(false, result);
-                    }
-                });
-            }
-        });
-    }
-
-    findByFilter(text, callback){
+    filterByText(text, callback){
         this.pool.getConnection(function(error, connection){
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
@@ -241,8 +224,8 @@ class DAOQuestions{
             }
         });
     }
-
-    postAnswer(params, callback){
+    
+    publishAnswer(params, callback){
         this.pool.getConnection(function(error, connection){
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
@@ -259,44 +242,12 @@ class DAOQuestions{
         });
     }
 
-    scoreQuestion(params, callback){
+    getNotAnswered(callback){
         this.pool.getConnection(function(error, connection){
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                connection.query("SELECT COUNT(*) as filas FROM questions_score q WHERE q.question=? AND q.user=?", [ params.question, params.user ], function(error, results){
-                    if(error){
-                        callback(new Error("Error de acceso a la base de datos"));
-                    } else{
-                        let sql = '', queryParams = [];
-                        if(results[0].filas === 0){ // insertar
-                            sql = "INSERT INTO questions_score(question,user,type) VALUES(?,?,?);";
-                            queryParams.push(params.question, params.user, params.type);
-                            connection.query(sql, queryParams, function(error, results){
-                                connection.release();
-                                if(error){
-                                    callback(new Error("Error de acceso a la base de datos"));
-                                } else{
-                                    callback(null);
-                                }
-                            });
-                        } else{
-                            connection.release();
-                            callback(null);
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    noAnswers(callback){
-        this.pool.getConnection(function(error, connection){
-            if(error){
-                callback(new Error("Error de conexion a la base de datos"));
-            } else{
-                let sql0 = "SELECT DISTINCT(question) FROM answers";
-                let sql1 = `SELECT q.ID, q.user, q.title, q.body, q.date, u.username, u.profileImg as userImg, u.id as userID FROM questions q JOIN users u WHERE q.user=u.email AND q.ID NOT IN (${sql0});`;
+                let sql1 = "SELECT q.ID, q.user, q.title, q.body, q.date, u.username, u.profileImg as userImg, u.id as userID FROM questions q JOIN users u WHERE q.user=u.email AND q.ID NOT IN (${sql0});";
                 let sql2 = "SELECT t.tagName, t.question FROM tags t JOIN questions q WHERE q.ID=t.question;";
                 connection.query(sql1 + sql2, function(error, results, fields){
                     connection.release();
@@ -326,37 +277,6 @@ class DAOQuestions{
                         }
                         
                         callback(false, { totalQuestions: response.length, questions: DAOQuestions.orderQuestions(response) });
-                    }
-                });
-            }
-        });
-    }
-
-    scoreAnswer(params, callback){
-        this.pool.getConnection(function(error, connection){
-            if(error){
-                callback(new Error("Error de conexion a la base de datos"));
-            } else{
-                connection.query("SELECT COUNT(*) as filas FROM answers_score a WHERE a.IdAnswer =? AND a.user=?", [ params.answer, params.currentUser ], function(error, results){
-                    if(error){
-                        callback(new Error("Error de acceso a la base de datos"));
-                    } else{
-                        let sql = '', queryParams = [];
-                        if(results[0].filas === 0){ // insertar
-                            sql = "INSERT INTO answers_score(IdAnswer,user,type) VALUES(?,?,?);";
-                            queryParams.push(params.answer, params.currentUser, params.type);
-                            connection.query(sql, queryParams, function(error, results){
-                                connection.release();
-                                if(error){
-                                    callback(new Error("Error de acceso a la base de datos"));
-                                } else{
-                                    callback(null);
-                                }
-                            });
-                        } else{
-                            connection.release();
-                            callback(null);
-                        }
                     }
                 });
             }
