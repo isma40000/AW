@@ -44,15 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //----------------------------------SESSION---------------------------------//
 
-// const MySQLStore = mysqlSession(session);
-// const sessionStore = new MySQLStore(config.mysqlConfig);
 
-// const middlewareSession = session({
-//     saveUninitialized: true,
-//     secret: "foobar34",
-//     resave: false,
-//     store: sessionStore
-// });
 app.use(middlewareSession);
 
 app.use(function(request, response, next) {
@@ -76,13 +68,7 @@ app.get("/imagen/:id", middlewares.checkSession, function(request, response){
     response.sendFile(path.join(__dirname, "./public/img", request.params.id));
 });
 
-app.listen(config.port, function(error) {
-    if (error) {
-        console.error("No se pudo inicializar el servidor: " + error.message);
-    } else {
-        console.log(`Servidor arrancado en el puerto ${config.port}`);
-    }
-});
+
 //---------------------------------SERVIDOR---------------------------------//
 app.listen(config.port, function(err) {
    if (err) {
@@ -93,15 +79,6 @@ app.listen(config.port, function(err) {
    }
 });
 //------------------------------ERRORMIDDLEWARE------------------------------//
-app.use("/prueba",function(request, response, next) {
-    jauja.__dirname;
-});
-app.use(function(request, response, next) {
-    response.status(404);
-    response.render("error404", { url: request.url });
-});
+app.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
+app.use(middlewares.middlewareServerError); // middleware ERROR 500
 
-app.use(function(error, request, response, next) {
-    response.status(500);
-    response.render("error500", {mensaje: error.message, pila: error.stack });
-});

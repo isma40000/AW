@@ -22,7 +22,7 @@ questionsRouter.get("/notAnswered", controller.getNotAnswered);
 questionsRouter.post("/createQuestion", controller.createQuestion);
 questionsRouter.post("/publishAnswer/:id", controller.publishAnswer);
 
-/*questionsRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-questionsRouter.use(middlewares.middlewareServerError); // middleware ERROR 500   */
+questionsRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
+questionsRouter.use(middlewares.middlewareServerError); // middleware ERROR 500   
 
 module.exports = questionsRouter;

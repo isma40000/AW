@@ -7,7 +7,7 @@ const controller    = require('../controllers/controllerUsers');
 const bodyParser        = require('body-parser');
 const multer            = require('multer');
 const path              = require('path');
-const upload     = multer({ dest : "../public/img"}); // Otro codificador de forms como body-parser pero para imagenes
+const upload     = multer({ dest : "../public/img") }); // Otro codificador de forms como body-parser pero para imagenes
 
 //OPERACIONES RELACIONADAS CON USURARIO, BUSQUEDAS Y ETC
 
@@ -39,8 +39,8 @@ loginRouter.post("/loginUser", controller.loginUser);
 loginRouter.get("/logoutUser", middlewares.checkSession, controller.logoutUser);
 
 
-/*loginRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-loginRouter.use(middlewares.middlewareServerError); // middleware ERROR 500*/
+loginRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
+loginRouter.use(middlewares.middlewareServerError); // middleware ERROR 500
 
 module.exports = usersRouter;
 
