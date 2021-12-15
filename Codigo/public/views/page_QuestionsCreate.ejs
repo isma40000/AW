@@ -20,7 +20,7 @@
                     <div class="form-row mt-3">
                         <div class="form-group">
                             <div class="row">
-                                <label class="h5" for="title">Titulo</label>
+                                <label class="h5" for="title">Titulo*</label>
                             </div>
                             <div class="row">
                                 <label for="title">Sé específico e imagina que estás haciendo la pregunta a otra persona</label>
@@ -31,7 +31,7 @@
                     <div class="form-row mt-3">
                         <div class="form-group">
                             <div class="row">
-                                <label  class="h5" for="bodyArea">Cuerpo</label>
+                                <label  class="h5" for="bodyArea">Cuerpo*</label>
                             </div>
                             <div class="row">
                                 <label  for="bodyArea">Incluye toda la información que alguien necesitaría para responder a tu pregunta</label>
@@ -55,6 +55,13 @@
                     </div>  
                 </form>
             </div>  
+            <div class="row text-center">
+                <div class="error">
+                    <% if(errorMsg){ %>
+                        <%= errorMsg %>
+                    <% } %>
+                </div>
+            </div>
         </div>
     </div>
 </div>

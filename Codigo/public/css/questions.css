@@ -7,6 +7,13 @@
     font-size: 2em;
     color: rgb(15, 90, 15);
 }
+.error{
+    background-color: rgb(230, 49, 49);
+    border-color: rgb(66, 16, 16);
+    color: rgb(51, 14, 14);
+    border-style: solid;
+    border-radius: 25%;
+}
 .texto-tag{
     font-size: 0.8em;
     overflow: hidden;

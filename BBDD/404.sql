@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-12-2021 a las 15:25:16
+-- Tiempo de generación: 16-12-2021 a las 00:41:43
 -- Versión del servidor: 10.4.21-MariaDB
 -- Versión de PHP: 8.0.12
 
@@ -53,19 +53,20 @@ CREATE TABLE `questions` (
   `question_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `q_body` varchar(5000) NOT NULL,
-  `user_email` varchar(100) NOT NULL
+  `user_email` varchar(100) NOT NULL,
+  `q_date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `questions`
 --
 
-INSERT INTO `questions` (`question_id`, `title`, `q_body`, `user_email`) VALUES
-(1, '¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?', 'Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé\r\nque estas propiedades de CSS sirven para posicionar un elemento dentro de la página.\r\n', 'nico@404.es'),
-(2, '¿Cómo funciona exactamente nth-child?', 'No acabo de comprender muy bien que hace exactamente y qué usos prácticos puede tener', 'roberto@404.es'),
-(3, 'Diferencias entre == y === (comparaciones en JavaScript)', 'Siempre he visto que en JavaScript hay:\r\nasignaciones =\r\ncomparaciones == y ===\r\nCreo entender que == hace algo parecido a comparar el valor de la variable y el === también\r\ncompara el tipo (como un equals de java).', 'sfg@404.es'),
-(4, 'Problema con asincronismo en Node', 'Soy nueva en Node... Tengo una modulo que conecta a una BD de postgres por medio de pgnode. En eso no tengo problemas. Mi problema es que al llamar a ese modulo, desde otro\r\nmodulo, y despues querer usar los datos que salieron de la BD me dice undefined... Estoy casi\r\nseguro que es porque la conexion a la BD devuelve una promesa, y los datos no estan\r\ndisponibles al momento de usarlos.', 'marta@404.es'),
-(5, '¿Qué es la inyección SQL y cómo puedo evitarla?\r\n', 'He encontrado bastantes preguntas en StackOverflow sobre programas o formularios web que\r\nguardan información en una base de datos (especialmente en PHP y MySQL) y que contienen\r\ngraves problemas de seguridad relacionados principalmente con la inyección SQL.\r\nNormalmente dejo un comentario y/o un enlace a una referencia externa, pero un comentario\r\nno da mucho espacio para mucho y sería positivo que hubiera una referencia interna en SOes\r\nsobre el tema así que decidí escribir esta pregunta.', 'lucas@404.es');
+INSERT INTO `questions` (`question_id`, `title`, `q_body`, `user_email`, `q_date`) VALUES
+(1, '¿Cual es la diferencia entre position: relative, position: absolute y position: fixed?', 'Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé\nque estas propiedades de CSS sirven para posicionar un elemento dentro de la página.\n', 'nico@404.es', '2021-12-15'),
+(2, '¿Cómo funciona exactamente nth-child?', 'No acabo de comprender muy bien que hace exactamente y qué usos prácticos puede tener', 'roberto@404.es', '2021-12-15'),
+(3, 'Diferencias entre == y === (comparaciones en JavaScript)', 'Siempre he visto que en JavaScript hay:\nasignaciones =\ncomparaciones == y ===\nCreo entender que == hace algo parecido a comparar el valor de la variable y el === también\ncompara el tipo (como un equals de java).', 'sfg@404.es', '2021-12-15'),
+(4, 'Problema con asincronismo en Node', 'Soy nueva en Node... Tengo una modulo que conecta a una BD de postgres por medio de pgnode. En eso no tengo problemas. Mi problema es que al llamar a ese modulo, desde otro\r\nmodulo, y despues querer usar los datos que salieron de la BD me dice undefined... Estoy casi\r\nseguro que es porque la conexion a la BD devuelve una promesa, y los datos no estan\r\ndisponibles al momento de usarlos.', 'marta@404.es', '2021-12-15'),
+(5, '¿Qué es la inyección SQL y cómo puedo evitarla?\r\n', 'He encontrado bastantes preguntas en StackOverflow sobre programas o formularios web que\r\nguardan información en una base de datos (especialmente en PHP y MySQL) y que contienen\r\ngraves problemas de seguridad relacionados principalmente con la inyección SQL.\r\nNormalmente dejo un comentario y/o un enlace a una referencia externa, pero un comentario\r\nno da mucho espacio para mucho y sería positivo que hubiera una referencia interna en SOes\r\nsobre el tema así que decidí escribir esta pregunta.', 'lucas@404.es', '2021-12-15');
 
 -- --------------------------------------------------------
 

@@ -37,23 +37,23 @@
                                 <div class="ml-2 mt-2 question_title"><%= question.title %></div>
                             </label>
                             <label class="row texto">
-                                <div class="ml-2 mt-1 mb-2 question_body"><%= question.body></div>
+                                <div class="ml-2 mt-1 mb-2 question_body"><%= question.q_body></div>
                             </label>
                             <div class="row justify-content-start">
                                 <% question.tags.forEach(function(tag){ %>
-                                    <a href="/preguntas/etiquetas/<%= tag %>" class=" btn btn-sm btn-dark m-2 texto-tag" title="<%= tag %>"><%= tag %></a>
+                                    <a href="/questions/tag/<%= tag %>" class=" btn btn-sm btn-dark m-2 texto-tag" title="<%= tag %>"><%= tag %></a>
                                 <% }); %>
                             </div>
                         </div>
                         <div class="col-4 justify-content-center rounded">
                             <label class="row text-center">
-                                <div class="question_date mt-4">Formulada el <%= question.date %></div>
+                                <div class="question_date mt-4">Formulada el <%= question.q_date %></div>
                             </label>
                             <div class="row justify-content-center">
                                 <img src="<%= question.userImg %>" class="img-fluid my-3 question_img" alt="Responsive image">
                             </div>
                             <label class="row text-center">
-                                <div class="question_nombre mb-2"><%= question.username %></div>
+                                <div class="question_nombre mb-2"><%= question.name %></div>
                             </label>
                         </div>
                     </div><!-- row responsive -->

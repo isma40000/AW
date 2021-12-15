@@ -14,19 +14,19 @@ module.exports = {
                 response.status(500);
                 response.render("error500");
             } else{
-                response.render("questions", { questions: data.questions, total: data.totalQuestions, title: 'Todas las preguntas' });
+                response.render("questions", { questions: data.questions, n_questions: data.totalQuestions, title: 'Todas las preguntas' });
             }
         });
     },
 
     // Ruta: GET /questions/search en el filtro del header
     findByText: function(request, response){
-        dao.filterByText(`%${request.query.busqueda}%`, function(error, data){
+        dao.filterByText(`%${request.query.desiredText}%`, function(error, data){
             if(error){
                 response.status(500);
                 response.render("error500");
             } else{
-                response.render("questions", { questions: data.questions, total: data.totalQuestions, title: `Resultados de la búsqueda "${request.query.busqueda}"` });
+                response.render("questions", { questions: data.questions, n_questions: data.totalQuestions, title: `Resultados de la búsqueda "${request.query.desiredText}"` });
             }
         });
     },
@@ -38,7 +38,7 @@ module.exports = {
                 response.status(500);
                 response.render("error500");
             } else{
-                response.render("questions", { questions: data.questions, total: data.totalQuestions, title: `Preguntas con la etiqueta [${request.params.label}]` });
+                response.render("questions", { questions: data.questions, n_questions: data.totalQuestions, title: `Preguntas con la etiqueta [${request.params.label}]` });
             }
         });
     },
@@ -50,13 +50,13 @@ module.exports = {
 
     // Ruta: POST /questions/createQuestion del FORM para crear la pregunta
     createQuestion: function(request, response){
-        let labels;
+        let tags;
         let aux = [];
-        if(request.body.labels !== undefined){
-            labels=request.body.labels;
-        }else{labels='';}
+        if(request.body.tags !== undefined){
+            tags=request.body.tags;
+        }else{tags='';}
         // labels = request.body.labels || '',
-        labels = labels.split('@').filter(function(tag){
+        tags = tags.split('@').filter(function(tag){
             var check;
             if(tag !== '' && !aux.includes(tag)){
                 check=true;
@@ -70,8 +70,8 @@ module.exports = {
         let params = {
             email   : request.session.currentEmail,
             title   : request.body.title,
-            body    : request.body.body,
-            tags    : labels
+            body    : request.body.bodyArea,
+            tags    : tags
         };
 
         if(params.title === "" || params.body === ""){
@@ -100,7 +100,7 @@ module.exports = {
         });
     },
 
-    // Ruta: /preguntas/publicarRespuesta/:id para publicar una respuesta dentro de la vista de una pregunta
+    // Ruta: /questions/publicarRespuesta/:id para publicar una respuesta dentro de la vista de una pregunta
     publishAnswer: function(request, response){
         let params = {
             question    : request.params.id,

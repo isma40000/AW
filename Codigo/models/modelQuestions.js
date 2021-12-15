@@ -12,9 +12,9 @@ class DAOQuestions{
     static orderQuestions(arr){
         let response = arr;
         response.sort(function(a, b){
-            if(a.date > b.date){
+            if(a.q_date > b.q_date){
                 return -1;
-            } if(a.date < b.date){
+            } if(a.q_date < b.q_date){
                 return 1;
             }
             return 0;
@@ -27,25 +27,45 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                connection.query("INSERT INTO questions(`user`, `title`, `body`) VALUES (?,?,?)", [ data.email, data.title, data.body ] , function(error, result){
+                connection.query("INSERT INTO questions(`user_email`, `title`, `q_body`) VALUES (?,?,?)", [ data.email, data.title, data.body ] , function(error, result){
                     if(error){
                         callback(new Error("Error de acceso a la base de datos"));
                     } else{
                         var questionID = result.insertId;
                         if(data.tags.length > 0){
-                            let queryStr = "INSERT INTO tags (question,tagName) VALUES ?;", params = [];
+                            let param;
                             for(var i = 0; i < data.tags.length; i++){
-                                params.push([ questionID, data.tags[i] ]);
+                                param=data.tags[1];
+                                //params.push([ questionID, data.tags[i] ]);
+                                connection.query("SELECT name FROM tags WHERE name=?", [ param ], function(error,res1){
+                                    connection.release();
+                                    if(error){
+                                        console.log(error);
+                                        callback(new Error("Error de acceso a la base de datos tags"));
+                                    } else{
+                                        if(res1.length === 0){
+                                            connection.query("INSERT INTO tags (name) VALUES ?;", [ param ], function(error){
+                                                connection.release();
+                                                if(error){
+                                                    console.log(error);
+                                                    callback(new Error("Error de acceso a la base de datos tags"));
+                                                }
+                                            });
+                                        }  
+                                    }
+                                })
+                                connection.query("INSERT INTO tags_questions (tag_name,question_id) VALUES ?,?;", [ param,questionID], function(error){
+                                    connection.release();
+                                    if(error){
+                                        console.log(error);
+                                        callback(new Error("Error de acceso a la base de datos tags"));
+                                    }
+                                    else{
+                                        callback(null);
+                                    }
+                                }); 
                             }
-                            connection.query(queryStr, [ params ], function(error){
-                                connection.release();
-                                if(error){
-                                    callback(new Error("Error de acceso a la base de datos tags"));
-                                } else{
-                                    callback(null);
-                                }
-                            });
-                        } else{
+                        } else {
                             connection.release();
                             callback(null);
                         }
@@ -62,8 +82,8 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                let sql1 = "SELECT q.ID, q.user, q.title, q.body, q.date, u.username, u.profileImg as userImg, u.id as userID FROM questions q JOIN users u ON q.user=u.email WHERE q.user=u.email;";
-                let sql2 = "SELECT t.tagName, t.question FROM tags t JOIN questions q WHERE q.ID=t.question;";
+                let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u ON q.user=u.email WHERE q.user=u.email;";
+                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 let sql = sql1 + sql2;
                 connection.query(sql, function(error, results, fields){
                     connection.release();
@@ -76,13 +96,13 @@ class DAOQuestions{
                         results[0].forEach(function(question){
                             question.tags = [];
                             question.date = moment(question.date).format('YYYY-MM-DD HH:mm:ss');
-                            if(question.body.length > 150){
-                                question.body = question.body.slice(0, 150) + '...';
-                            }
-                            questions[question.ID] = question;
+                            // if(question.body.length > 150){
+                            //     question.body = question.body.slice(0, 150) + '...';
+                            // }
+                            questions[question.question_id] = question;
                         });
                         results[1].forEach(function(tag){
-                            questions[tag.question].tags.push(tag.tagName);
+                            questions[tag.question_id].tags.push(tag.name);
                         });
                         
                         // Formateamos la salida
@@ -104,9 +124,10 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                let sql1 = "SELECT t.question FROM tags t JOIN questions q WHERE q.ID=t.question AND t.tagName=?;";
-                let sql2 = "SELECT q.ID, q.user, q.title, q.body, q.date, u.username, u.profileImg as userImg, u.id as userID FROM questions q JOIN users u WHERE q.user=u.email ORDER BY q.date DESC;";
-                let sql3 = "SELECT t.tagName, t.question FROM tags t JOIN questions q WHERE q.ID=t.question;";
+                
+                let sql1 = "SELECT q.question_id FROM questions q JOIN tags_questions tq ON  q.question_id=tq.question_id JOIN tags t ON tq.name = t.name WHERE t.name=?;";
+                let sql2 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.profileImg as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email ORDER BY q.q_date DESC;";
+                let sql3 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 let sql = sql1 + sql2 + sql3;
                 connection.query(sql, [ tagName ] , function(error, results){
                     connection.release();
@@ -116,20 +137,20 @@ class DAOQuestions{
                         let tags        = {}, // todos los tags de cada pregunta
                             response    = []; // todas las preguntas
                         results[0].forEach(function(tag){
-                            tags[tag.question] = [];
+                            tags[tag.question_id] = [];
                         });
                         results[2].forEach(function(tag){
-                            if(tags[tag.question]){
-                                tags[tag.question].push(tag.tagName);
+                            if(tags[tag.question_id]){
+                                tags[tag.question_id].push(tag.name);
                             }
                         });
                         results[1].forEach(function(question){
-                            if(tags[question.ID]){
-                                question.date = moment(question.date).format('YYYY-MM-DD HH:mm:ss');
-                                question.tags = tags[question.ID];
-                                if(question.body.length > 150){
-                                    question.body = question.body.slice(0, 150) + '...';
-                                }
+                            if(tags[question.question_id]){
+                                question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');
+                                question.tags = tags[question.question_id];
+                                // if(question.q_body.length > 150){
+                                //     question.q_body = question.body.slice(0, 150) + '...';
+                                // }
                                 response.push(question);
                             }
                         });
@@ -147,8 +168,8 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                let sql1 = "SELECT q.ID, q.user, q.title, q.body, q.date, u.username, u.profileImg as userImg, u.id as userID FROM questions q JOIN users u WHERE q.user=u.email AND (q.title LIKE ? OR q.body LIKE ?);";
-                let sql2 = "SELECT t.tagName, t.question FROM tags t JOIN questions q WHERE q.ID=t.question;";
+                let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email AND (q.title LIKE ? OR q.q_body LIKE ?);";
+                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 let sql = sql1 + sql2;
                 connection.query(sql, [ text, text ] , function(error, results){
                     connection.release();
@@ -160,15 +181,15 @@ class DAOQuestions{
                         // Formateamos nuestro objeto
                         results[0].forEach(function(question){
                             question.tags = [];
-                            question.date = moment(question.date).format('YYYY-MM-DD HH:mm:ss');
-                            if(question.body.length > 150){
-                                question.body = question.body.slice(0, 150) + '...';
-                            }
-                            questions[question.ID] = question;
+                            question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');
+                            // if(question.body.length > 150){
+                            //     question.body = question.body.slice(0, 150) + '...';
+                            // }
+                            questions[question.question_id] = question;
                         });
                         results[1].forEach(function(tag){
-                            if(questions[tag.question]){
-                                questions[tag.question].tags.push(tag.tagName);
+                            if(questions[tag.question_id]){
+                                questions[tag.question_id].tags.push(tag.name);
                             }
                         });
                         
@@ -196,13 +217,9 @@ class DAOQuestions{
                     } else{
                         // console.log(results);
                         let sql1 = '', sql2 = '', sql3 = '', queryParams = [];
-                        if(results[0].filas === 0){ // sumar visita
-                            sql1 = "INSERT INTO visits(question, user) VALUES(?,?);";
-                            queryParams.push(params.question, params.user);
-                        }
-                        sql1 += "SELECT q.ID as qID, q.title, q.body, q.date, q.visits, q.nLikes, q.nDislikes, u.ID as qUserID, u.profileImg, u.username FROM questions q JOIN users u WHERE q.user=u.email AND q.ID=?;";
-                        sql2 = "SELECT t.tagName FROM tags t WHERE t.question=?;";
-                        sql3 = "SELECT a.ID as aID, u.username as aUser, a.body, a.nLikes, a.nDislikes, a.date, u.ID as userID, u.profileImg FROM answers a JOIN users u WHERE a.user=u.email AND a.question=?;";
+                        sql1 = "SELECT q.question_id as qID, q.title, q.q_body, q.q_date, u.email as qUserID, u.user_img, u.name FROM questions q JOIN users u WHERE q.user_email=u.email AND q.question_id=?;";
+                        sql2 = "SELECT t.name FROM tags t JOIN tags_questions tq ON t.name=tq.tag_name WHERE tq.question_id=?;";
+                        sql3 = "SELECT a.answer_id as aID, u.name as aUser, a.a_body, a.a_date, u.email as userID, u.user_img FROM answers a JOIN users u WHERE a.user_email=u.email AND a.question_id=?;";
                         queryParams.push(params.question, params.question, params.question);
 
                         connection.query(sql1 + sql2 + sql3, queryParams, function(error, results){
@@ -211,11 +228,11 @@ class DAOQuestions{
                                 callback(new Error("Error de acceso a la base de datos"));
                             } else{
                                 let total = results.length;
-                                let q = results[total - 3][0];
+                                let q = results[0];
                                 q.tags = [];
-                                q.date = moment(q.date).format('YYYY-MM-DD HH:mm:ss');
-                                results[total - 2].forEach(function(tag){ q.tags.push(tag.tagName); });
-                                results[total - 1].forEach(function(answer){ answer.date = moment(answer.date).format('YYYY-MM-DD HH:mm:ss'); });
+                                q.q_date = moment(q.q_date).format('YYYY-MM-DD HH:mm:ss');
+                                results[1].forEach(function(tag){ q.tags.push(tag.name); });
+                                results[2].forEach(function(answer){ answer.a_date = moment(answer.a_date).format('YYYY-MM-DD HH:mm:ss'); });
                                 callback(null, { question: q, answers: results[total - 1] });
                             }
                         });
@@ -230,7 +247,7 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{               
-                connection.query("INSERT INTO answers(user, question, body) VALUES (?,?,?)", [ params.user, params.question, params.text ], function(error, results){
+                connection.query("INSERT INTO answers(user_email, question_id, a_body) VALUES (?,?,?)", [ params.user, params.question, params.text ], function(error, results){
                     connection.release();
                     if(error){
                         callback(new Error("Error de acceso a la base de datos"));
@@ -247,8 +264,9 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                let sql1 = "SELECT q.ID, q.user, q.title, q.body, q.date, u.username, u.profileImg as userImg, u.id as userID FROM questions q JOIN users u WHERE q.user=u.email AND q.ID NOT IN (${sql0});";
-                let sql2 = "SELECT t.tagName, t.question FROM tags t JOIN questions q WHERE q.ID=t.question;";
+                let sql0 = "SELECT DISTINCT(question_id) FROM answers";
+                let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email AND q.question_id NOT IN (${sql0});";
+                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 connection.query(sql1 + sql2, function(error, results, fields){
                     connection.release();
                     if(error){
@@ -259,15 +277,15 @@ class DAOQuestions{
                         // Formateamos nuestro objeto
                         results[0].forEach(function(question){
                             question.tags = [];
-                            question.date = moment(question.date).format('YYYY-MM-DD HH:mm:ss');
-                            if(question.body.length > 150){
-                                question.body = question.body.slice(0, 150) + '...';
-                            }
-                            questions[question.ID] = question;
+                            question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');
+                            // if(question.q_body.length > 150){
+                            //     question.q_body = question.q_body.slice(0, 150) + '...';
+                            // }
+                            questions[question.question_id] = question;
                         });
                         results[1].forEach(function(tag){
-                            if(questions[tag.question]){
-                                questions[tag.question].tags.push(tag.tagName);
+                            if(questions[tag.question_id]){
+                                questions[tag.question_id].tags.push(tag.name);
                             }
                         });
                         
