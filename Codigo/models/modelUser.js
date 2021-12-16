@@ -65,7 +65,7 @@ class DUsers{
                         }
                         else{
                             rows = rows[0];
-                            callback(null, { name: rows.name, email: rows.email, id:rows.id, profileImg :rows.profileImg });
+                            callback(null, { name: rows.name, email: rows.email, profileImg :rows.user_img });
                         }
                     }
                 }); 

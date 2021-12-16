@@ -7,7 +7,7 @@ const bodyParser        = require('body-parser');
 const express           = require('express');
 const path              = require('path');
 const morgan            = require('morgan');
-const staticFiles       = path.join(__dirname, "public");
+const staticFiles       = "./public";
 const usersRouter       = require("./routers/routerUsers");
 const questionsRouter   = require('./routers/routerQuestions');
 const session           = require('express-session');
@@ -31,40 +31,38 @@ const middlewareSession = session({
 
 const app = express();
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "./views"));
-
+app.set("views", "./public/views");
 // Recursos estaticos
 //LOS FAVICONS, MORGAN Y TAL SEGURAMENTE TENDRAMOS QUE CAMBIARLO
-const ficherosEstaticos = path.join(__dirname, "public");
-app.use(express.static(ficherosEstaticos));
-app.use(favicon(__dirname + "/public/img/favicon.png"));
-
+app.use(express.static(staticFiles));
 app.use(morgan("dev"));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 //----------------------------------SESSION---------------------------------//
 
 
 app.use(middlewareSession);
 
-app.use(function(request, response, next) {
-    console.log("request.session.currentUser ========> ", request.session.currentUser);
-    next();
-})
+// app.use(function(request, response, next) {
+//     console.log("request.session.currentUser ========> ", request.session.currentUser);
+//     next();
+// })
 
 //--------------------------------- RUTAS ----------------------------------//
-app.use("/users", routerUsers);
-app.use("/questions", routerQuestions);
+app.use("/users", usersRouter);
+app.use("/questions", questionsRouter);
 //---------------------------------MANEJADORES DE RUTAS ----------------------------------//
 app.get("/", (request, response) => {
-    response.redirect("/U_index");
+    response.status(200);
+    response.redirect("/page_Main");
 });
 
-app.get("/U_index", middlewares.checkSession, (request, response) => {
-    response.render("U_index");
+app.get("/page_Main", middlewares.loggedCheck, (request, response) => {
+    response.status(200);
+    response.render("page_Main",{userImg : null});
 });
 
-app.get("/imagen/:id", middlewares.checkSession, function(request, response){
+app.get("/imagen/:id", middlewares.loggedCheck, function(request, response){
     response.sendFile(path.join(__dirname, "./public/img", request.params.id));
 });
 
@@ -79,6 +77,6 @@ app.listen(config.port, function(err) {
    }
 });
 //------------------------------ERRORMIDDLEWARE------------------------------//
-app.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-app.use(middlewares.middlewareServerError); // middleware ERROR 500
+//app.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
+//app.use(middlewares.middlewareServerError); // middleware ERROR 500
 
