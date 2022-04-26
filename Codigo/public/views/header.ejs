@@ -14,7 +14,10 @@
             </div>
             <div class= "col-2 text-center">
                 <div>
-                    <img src="<%= userImg %>" class="mt-4 user_img" alt="Foto de perfil">
+                    <% if(userImg !== null) {%>
+                        <img src="<%= userImg %>" class="mt-4 user_img" alt="Foto de perfil">
+                    <% }else{%> 
+                    <% }%> 
                     <a href="/users/logoutUser" class="btn btn-dark btn-sm my-4 text-light"style="width: 70%;">Cerrar Sesión</a>
                 </div>
             </div>

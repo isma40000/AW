@@ -57,6 +57,12 @@ app.get("/", (request, response) => {
     response.redirect("/page_Main");
 });
 
+app.get("/login", (request, response) => {
+    console.log("Estoy en app.js /login");
+    response.status(200);
+    response.render("page_Login",{userImg : null});
+});
+
 app.get("/page_Main", middlewares.loggedCheck, (request, response) => {
     response.status(200);
     response.render("page_Main",{userImg : null});
@@ -66,6 +72,11 @@ app.get("/imagen/:id", middlewares.loggedCheck, function(request, response){
     response.sendFile(path.join(__dirname, "./public/img", request.params.id));
 });
 
+app.get("/logout", function (request, response) {
+    response.status(200);
+    request.session.destroy();
+    response.render("page_Login", { errorMsg: null });
+});
 
 //---------------------------------SERVIDOR---------------------------------//
 app.listen(config.port, function(err) {

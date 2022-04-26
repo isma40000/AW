@@ -2,7 +2,7 @@
 
 const DUsers  = require('../models/modelUser'); // DUsers
 const pool      = require("../database");
-let dao         = new DUsers(pool);
+let daoUsers         = new DUsers(pool);
 
 module.exports = {
     // Ruta: /usuarios/
@@ -43,9 +43,9 @@ module.exports = {
     //FUNCIONES RELACIONADAS CON EL LOGIN
     
     // Ruta: /loginout/registro
-    getRegisterRedirect: function(request, response){
+    /* getRegisterRedirect: function(request, response){
         response.render("page_AccountCreate", { errorMsg : null });
-    },
+    }, */
 
     // Ruta: /loginout/login
     getLoginRedirect: function(request, response){
@@ -88,6 +88,7 @@ module.exports = {
 
     // Ruta: POST a la bbdd para iniciar la sesion
     loginUser: function(request, response){
+        console.log("He llegado al controler");
         daoUsers.isUserCorrect(request.body.email, request.body.password, function(error, user){
             if(error){
                 response.status(500);

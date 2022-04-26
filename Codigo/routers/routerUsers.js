@@ -7,12 +7,10 @@ const controller    = require('../controllers/controllerUser');
 const bodyParser    = require('body-parser');
 const multer     = require('multer');
 const path       = require('path');
+const session = require('express-session');
 const upload     = multer({ dest : "../public/img" }); // Otro codificador de forms como body-parser pero para imagenes
 
 //OPERACIONES RELACIONADAS CON USURARIO, BUSQUEDAS Y ETC
-
-// Middlewares
-usersRouter.use(middlewares.loggedCheck);
 
 // Vistas y acciones
 // usersRouter.get("/", controller.getAllUsers);
@@ -30,17 +28,16 @@ usersRouter.use(express.urlencoded({ extended: false }));
 
 
 // Vistas
-usersRouter.post("/login",controller.loginUser);
-usersRouter.get("/accountCreate", controller.getRegisterRedirect);
-usersRouter.get("/",middlewares.loggedCheck,controller.paginaMain);
+usersRouter.post("/",controller.loginUser);
+//usersRouter.post("/login",controller.loginUser);
+usersRouter.get("/accountCreate", (request,response)=>{console.log("Estoy en /users/accountCreate");response.render("page_AccountCreate", { userImg:null,errorMsg : null })});
 // Forms/acciones de las vistas
 
 usersRouter.post("/createAccount", upload.single("img"), controller.registerUser);
 usersRouter.get("/logoutUser", middlewares.loggedCheck, controller.logoutUser);
 
 
-usersRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-usersRouter.use(middlewares.middlewareServerError); // middleware ERROR 500
+
 
 module.exports = usersRouter;
 
