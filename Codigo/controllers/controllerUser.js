@@ -96,7 +96,7 @@ module.exports = {
             } else if(user !== null){
                 request.session.currentName     = user.name;
                 request.session.currentEmail    = user.email;
-                request.session.currentImg      = user.user_img;
+                request.session.currentImg      = user.profileImg;
                 response.status(200);
                 response.render("page_Main",{userImg : request.session.currentImg});
             } else{

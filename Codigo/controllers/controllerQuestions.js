@@ -9,8 +9,10 @@ let dao             = new DAOQuestions(pool);
 module.exports = {
     // Ruta: /questions/
     getAllQuestions : function(request, response){
+        console.log("He llegado a getAllQuestions");
         dao.readQuestions(function(error, data){
             if(error){
+                console.log(error);
                 response.status(500);
                 response.render("error500");
             } else{

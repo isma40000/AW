@@ -82,8 +82,8 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u ON q.user=u.email WHERE q.user=u.email;";
-                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
+                let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u ON q.user_email=u.email WHERE q.user_email=u.email;";
+                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.tag_name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 let sql = sql1 + sql2;
                 connection.query(sql, function(error, results, fields){
                     connection.release();

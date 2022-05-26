@@ -65,6 +65,7 @@ class DUsers{
                         }
                         else{
                             rows = rows[0];
+                            console.log("Esta es la direccion de img: "+rows.user_img);
                             callback(null, { name: rows.name, email: rows.email, profileImg :rows.user_img });
                         }
                     }
