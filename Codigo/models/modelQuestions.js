@@ -126,7 +126,7 @@ class DAOQuestions{
             } else{
                 
                 let sql1 = "SELECT q.question_id FROM questions q JOIN tags_questions tq ON  q.question_id=tq.question_id JOIN tags t ON tq.name = t.name WHERE t.name=?;";
-                let sql2 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.profileImg as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email ORDER BY q.q_date DESC;";
+                let sql2 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_image as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email ORDER BY q.q_date DESC;";
                 let sql3 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 let sql = sql1 + sql2 + sql3;
                 connection.query(sql, [ tagName ] , function(error, results){
