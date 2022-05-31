@@ -75,7 +75,7 @@ module.exports = {
                 daoUsers.createUser(data, function (error) {
                     if (error) {
                         response.status(500);
-                        response.render("error_500");
+                        response.render("error_500",{titulo:error.name, mensaje:error.message});
                     } else {
                         response.redirect("/users/login");
                     }
@@ -92,7 +92,7 @@ module.exports = {
         daoUsers.isUserCorrect(request.body.email, request.body.password, function(error, user){
             if(error){
                 response.status(500);
-                response.render("error_500");
+                response.render("error_500",{titulo:error.name, mensaje:error.message});
             } else if(user !== null){
                 request.session.currentName     = user.name;
                 request.session.currentEmail    = user.email;

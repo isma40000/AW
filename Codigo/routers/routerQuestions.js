@@ -12,11 +12,11 @@ questionsRouter.use(middlewares.loggedCheck);
 
 // Vistas
 questionsRouter.get("/", controller.getAllQuestions);
+questionsRouter.get("/notAnswered", controller.getNotAnswered);
 questionsRouter.get("/tag/:label", controller.findByTag);
 questionsRouter.get("/create", controller.create);
 questionsRouter.get("/search", controller.findByText);
 questionsRouter.get("/:id", controller.getQuestion);
-questionsRouter.get("/notAnswered", controller.getNotAnswered);
 
 //Acciones de las vistas
 questionsRouter.post("/createQuestion", controller.createQuestion);

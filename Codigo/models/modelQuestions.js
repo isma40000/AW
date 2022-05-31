@@ -95,7 +95,7 @@ class DAOQuestions{
                         // Formateamos nuestro objeto
                         results[0].forEach(function(question){
                             question.tags = [];
-                            question.date = moment(question.date).format('YYYY-MM-DD HH:mm:ss');
+                            question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');                        
                             // if(question.body.length > 150){
                             //     question.body = question.body.slice(0, 150) + '...';
                             // }
@@ -125,9 +125,9 @@ class DAOQuestions{
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
                 
-                let sql1 = "SELECT q.question_id FROM questions q JOIN tags_questions tq ON  q.question_id=tq.question_id JOIN tags t ON tq.name = t.name WHERE t.name=?;";
-                let sql2 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_image as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email ORDER BY q.q_date DESC;";
-                let sql3 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
+                let sql1 = "SELECT q.question_id FROM questions q JOIN tags_questions tq ON  q.question_id=tq.question_id JOIN tags t ON tq.tag_name = t.name WHERE t.name=?;";
+                let sql2 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email ORDER BY q.q_date DESC;";
+                let sql3 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.tag_name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 let sql = sql1 + sql2 + sql3;
                 connection.query(sql, [ tagName ] , function(error, results){
                     connection.release();
@@ -169,7 +169,7 @@ class DAOQuestions{
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
                 let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email AND (q.title LIKE ? OR q.q_body LIKE ?);";
-                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
+                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.tag_name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 let sql = sql1 + sql2;
                 connection.query(sql, [ text, text ] , function(error, results){
                     connection.release();
@@ -264,13 +264,14 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
+                console.log("Modelo preguntas: getNotAnswered")
                 let sql0 = "SELECT DISTINCT(question_id) FROM answers";
-                let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email AND q.question_id NOT IN (${sql0});";
-                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.name = t.name JOIN questions q ON tq.question_id = q.question_id;";
+                let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email AND q.question_id NOT IN ("+sql0+");";
+                let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.tag_name = t.name JOIN questions q ON tq.question_id = q.question_id;";
                 connection.query(sql1 + sql2, function(error, results, fields){
                     connection.release();
                     if(error){
-                        callback(new Error("Error de acceso a la base de datos"));
+                        callback(new Error("Error de acceso a la base de datos:"+error));
                     } else{
                         let questions   = {},
                             response    = [];
@@ -293,8 +294,8 @@ class DAOQuestions{
                         for (const [ k, v ] of Object.entries(questions)) {
                             response.push(v);
                         }
-                        
-                        callback(false, { totalQuestions: response.length, questions: DAOQuestions.orderQuestions(response) });
+                        response = DAOQuestions.orderQuestions(response);
+                        callback(false, { totalQuestions: response.length, questions: response });
                     }
                 });
             }

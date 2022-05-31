@@ -14,7 +14,7 @@ module.exports = {
             if(error){
                 console.log(error);
                 response.status(500);
-                response.render("error500");
+                response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
                 response.render("page_QuestionsAll", { questions: data.questions, n_questions: data.totalQuestions, title: 'Todas las preguntas' });
             }
@@ -26,7 +26,7 @@ module.exports = {
         dao.filterByText(`%${request.query.desiredText}%`, function(error, data){
             if(error){
                 response.status(500);
-                response.render("error500");
+                response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
                 response.render("page_QuestionsAll", { questions: data.questions, n_questions: data.totalQuestions, title: `Resultados de la búsqueda "${request.query.desiredText}"` });
             }
@@ -38,7 +38,7 @@ module.exports = {
         dao.filterByTag(request.params.label, function(error, data){
             if(error){
                 response.status(500);
-                response.render("error500");
+                response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
                 response.render("page_QuestionsAll", { questions: data.questions, n_questions: data.totalQuestions, title: `Preguntas con la etiqueta [${request.params.label}]` });
             }
@@ -82,7 +82,7 @@ module.exports = {
             dao.createQuestion(params, function(error){
                 if(error){
                     response.status(500);
-                    response.render("error500");
+                    response.render("error500",{titulo:error.name, mensaje:error.message});
                 } else{
                     response.redirect("/questions");
                 }
@@ -95,7 +95,7 @@ module.exports = {
         dao.filterQuestionByID({ question : request.params.id, user : request.session.currentEmail }, function(error, qData){
             if(error){
                 response.status(500);
-                response.render("error500");
+                response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
                 response.render("page_QuestionDetails", { question: qData.question, answers: qData.answers });
             }
@@ -113,7 +113,7 @@ module.exports = {
         dao.publishAnswer(params, function(error){
             if(error){
                 response.status(500);
-                response.render("error500");
+                response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
                 response.redirect("/questions");
             }
@@ -122,12 +122,13 @@ module.exports = {
 
     // Ruta: /questions/notAnswered
     getNotAnswered: function(request, response){
+        console.log("He llegado al controlador de preguntas")
         dao.getNotAnswered(function(error, data){
             if(error){
                 response.status(500);
-                response.render("error500");
+                response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
-                response.render("page_QuestionsAll", { questions: data.questions, total: data.questions.length, title: "Preguntas sin responder" });
+                response.render("page_QuestionsAll", { questions: data.questions, n_questions: data.questions.length, title: "Preguntas sin responder" });
             }
         });
     },
