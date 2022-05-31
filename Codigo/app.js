@@ -69,7 +69,7 @@ app.get("/page_Main", middlewares.loggedCheck, (request, response) => {
 });
 
 app.get("/imagen/:id", middlewares.loggedCheck, function(request, response){
-    response.sendFile(path.join(__dirname, "./public/img", request.params.id));
+    response.sendFile(path.join(__dirname, "/public/img/", request.params.id));
 });
 
 app.get("/logout", function (request, response) {

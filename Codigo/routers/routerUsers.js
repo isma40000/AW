@@ -8,8 +8,14 @@ const bodyParser    = require('body-parser');
 const multer     = require('multer');
 const path       = require('path');
 const session = require('express-session');
-const upload     = multer({ dest : path.join(__dirname, "../public/img") }); // Otro codificador de forms como body-parser pero para imagenes
-
+var storage = multer.diskStorage({
+    destination: path.join(__dirname, "../public/img"),
+    filename: function(req, file, callback) {
+      callback(null, file.originalname);
+    }
+  });
+//const upload  = multer({ dest : path.join(__dirname, "../public/img") }); // Otro codificador de forms como body-parser pero para imagenes
+const upload  = multer({ storage: storage });
 //OPERACIONES RELACIONADAS CON USURARIO, BUSQUEDAS Y ETC
 
 // Vistas y acciones
