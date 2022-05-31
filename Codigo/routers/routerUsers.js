@@ -8,7 +8,7 @@ const bodyParser    = require('body-parser');
 const multer     = require('multer');
 const path       = require('path');
 const session = require('express-session');
-const upload     = multer({ dest : "../public/img" }); // Otro codificador de forms como body-parser pero para imagenes
+const upload     = multer({ dest : path.join(__dirname, "../public/img") }); // Otro codificador de forms como body-parser pero para imagenes
 
 //OPERACIONES RELACIONADAS CON USURARIO, BUSQUEDAS Y ETC
 

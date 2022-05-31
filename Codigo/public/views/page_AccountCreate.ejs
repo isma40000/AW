@@ -13,7 +13,7 @@
 <div class="container-fluid " style="margin-top: 1em;">
     <div class="row  justify-content-center mt-5"> 
         <div class="col-4 border border-dark rounded bg-light">
-            <form class="formulario  w-30" action="/user/createAccount" method="POST" enctype="multipart/form-data">
+            <form class="formulario  w-30" action="/users/createAccount" method="POST" enctype="multipart/form-data">
                 <div class="form-row mt-3">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Correo*</label>
@@ -29,13 +29,13 @@
                 <div class="form-row mt-3">
                     <div class="form-group">
                         <label for="exampleInputPassword1">Confirmar contraseña*</label>
-                        <input type="password" class="form-control" name="password_conf" placeholder="Introducir confirmación de contraseña">
+                        <input type="password" class="form-control" name="password_c" placeholder="Introducir confirmación de contraseña">
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <div class="form-group">
                         <label for="exampleInputPassword1">Nombre para mostrar*</label>
-                        <input type="password" class="form-control" name="name" placeholder="Introducir nombre para mostrar">
+                        <input type="text" class="form-control" name="name" placeholder="Introducir nombre para mostrar">
                     </div>
                 </div>
                 <div class="form-row mt-3">
@@ -49,7 +49,7 @@
                 </div>  
             </form>
             <div class="form-row text-center mt-4">
-                <a class="btn bg-dark text-light mb-2" style="width: 30%;" href="/user/login">Iniciar sesión</a>
+                <a class="btn bg-dark text-light mb-2" style="width: 30%;" href="/login/">Iniciar sesión</a>
             </div>  
         </div>
     </div>

@@ -61,13 +61,13 @@ module.exports = {
             email       : request.body.email,
             name    : request.body.name,
             password    : request.body.password,
-            password_c  : request.body.password_confirm,
+            password_c  : request.body.password_c,
             profileImg  : request.file
         };
         if(data.profileImg){
             data.profileImg = data.profileImg.filename // nombre del fichero, luego para obtener las imgs se hace a traves de /imagen/:id
         }
-    
+        console.log(data.profileImg)
         if(data.password === data.password_c){
             if(data.name === '' || data.email === '' || data.password === '' || data.password_c === ''){
                 response.render("page_AccountCreate", { errorMsg : 'Rellena todos los campos obligatorios marcados con *' });
@@ -75,9 +75,9 @@ module.exports = {
                 daoUsers.createUser(data, function (error) {
                     if (error) {
                         response.status(500);
-                        response.render("error_500",{titulo:error.name, mensaje:error.message});
+                        response.render("error500",{titulo:error.name, mensaje:error.message});
                     } else {
-                        response.redirect("/users/login");
+                        response.redirect("/login");
                     }
                 });
             }
