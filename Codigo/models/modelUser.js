@@ -79,7 +79,7 @@ class DUsers{
                 callback(new Error("Error de conexión a la base de datos"));
             }
             else{
-                connection.query("SELECT profileImg as imageUSer FROM users WHERE email=?", [ email ], function(error, result){
+                connection.query("SELECT user_img as imageUSer FROM users WHERE email=?", [ email ], function(error, result){
                     connection.release(); // devolver al pool la conexión
                     if(error){
                         callback(new Error("Error de acceso a la base de datos"));
@@ -101,7 +101,7 @@ class DUsers{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                let sql = "SELECT id as userid, name, profileImg as img, t FROM users u WHERE u.name LIKE ?;";
+                let sql = "SELECT id as userid, name, user_img as img, t FROM users u WHERE u.name LIKE ?;";
                 connection.query(sql, [ text ] , function(error, results){
                     connection.release();
                     if(error){
@@ -124,7 +124,7 @@ class DUsers{
                         callback(new Error("Error de acceso a la base de datos"));
                     } else{
                         let email = result[0].email;
-                        let sql1 = "SELECT u.date, u.name, u.profileImg as img, FROM users u WHERE u.id=?;";
+                        let sql1 = "SELECT u.date, u.name, u.user_img as img, FROM users u WHERE u.id=?;";
                         let sql2 = "SELECT COUNT(*) AS questions FROM questions WHERE user=?;";
                         let sql3 = "SELECT COUNT(*) AS answers FROM answers WHERE user=?;";
                         // let sql4 = "SELECT MedalType, COUNT(MedalType) as medalsNumber, MedalName FROM medals_user WHERE IdUser=? GROUP BY MedalType ORDER BY MedalType DESC";
