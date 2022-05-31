@@ -25,47 +25,72 @@ class DAOQuestions{
     createQuestion(data, callback){
         this.pool.getConnection(function(error, connection){
             if(error){
+                console.log("C1");
+                connection.release();
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
                 connection.query("INSERT INTO questions(`user_email`, `title`, `q_body`) VALUES (?,?,?)", [ data.email, data.title, data.body ] , function(error, result){
                     if(error){
+                        console.log("C2");
+                        connection.release();
                         callback(new Error("Error de acceso a la base de datos"));
                     } else{
                         var questionID = result.insertId;
                         if(data.tags.length > 0){
-                            let param;
-                            for(var i = 0; i < data.tags.length; i++){
-                                param=data.tags[1];
+                            console.log(data.tags);
+                            console.log(data.tags.length);
+                            data.tags.forEach(function (value, i) {
+                                let param=value;
+                                console.log("Parametro "+i+" "+param);
                                 //params.push([ questionID, data.tags[i] ]);
                                 connection.query("SELECT name FROM tags WHERE name=?", [ param ], function(error,res1){
-                                    connection.release();
+                                    //connection.release();
                                     if(error){
                                         console.log(error);
+                                        console.log("C3");
+                                        connection.release();
                                         callback(new Error("Error de acceso a la base de datos tags"));
                                     } else{
+                                        console.log(res1.length)
                                         if(res1.length === 0){
-                                            connection.query("INSERT INTO tags (name) VALUES ?;", [ param ], function(error){
-                                                connection.release();
+                                            console.log("He entrado en donde los tag con longitud = "+res1.length +" Parametro "+i+" "+param);
+                                            connection.query("INSERT INTO tags (name) VALUES (?);", [ param ], function(error){
                                                 if(error){
-                                                    console.log(error);
-                                                    callback(new Error("Error de acceso a la base de datos tags"));
+                                                    if (error.code === 'ER_DUP_ENTRY') {
+                                                        console.log("tag no insertado -->  ER_DUP_ENTRY");
+                                                        console.log("C4-a "+i);
+                                                    }else{
+                                                        console.log("tag no insertado -->  hay error");
+                                                        console.log(error);
+                                                        console.log("C4-b "+i);
+                                                        connection.release();
+                                                        callback(new Error("Error de acceso a la base de datos tags"));
+                                                    }
+                                                }else{
+                                                    console.log("tag insertado --> no hay error");
                                                 }
                                             });
-                                        }  
+                                        }else{console.log("No entre al if de res1");}
                                     }
                                 })
-                                connection.query("INSERT INTO tags_questions (tag_name,question_id) VALUES ?,?;", [ param,questionID], function(error){
-                                    connection.release();
+                                connection.query("INSERT INTO tags_questions (tag_name,question_id) VALUES (?,?);", [ param,questionID], function(error){
+                                    console.log("La verdadera vuelta "+ i);
                                     if(error){
+                                        console.log("C5");
+                                        connection.release();
                                         console.log(error);
                                         callback(new Error("Error de acceso a la base de datos tags"));
                                     }
                                     else{
-                                        callback(null);
+                                        console.log("C6");
                                     }
                                 }); 
-                            }
+                            });
+                            console.log("C7");
+                            connection.release();
+                            callback(null);
                         } else {
+                            console.log("C8");
                             connection.release();
                             callback(null);
                         }

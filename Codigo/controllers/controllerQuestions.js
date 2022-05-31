@@ -52,6 +52,7 @@ module.exports = {
 
     // Ruta: POST /questions/createQuestion del FORM para crear la pregunta
     createQuestion: function(request, response){
+        console.log("Estoy en createQuestion");
         let tags;
         let aux = [];
         if(request.body.tags !== undefined){
@@ -75,16 +76,19 @@ module.exports = {
             body    : request.body.bodyArea,
             tags    : tags
         };
-
+        console.log("Estoy en createQuestion 2");
         if(params.title === "" || params.body === ""){
             response.render("page_QuestionsCreate", { errorMsg : 'Rellena todos los campos obligatorios marcados con *' });
         } else{
+            console.log("Estoy en createQuestion 3");
             dao.createQuestion(params, function(error){
+                console.log("Estoy en createQuestion 4");
                 if(error){
                     response.status(500);
                     response.render("error500",{titulo:error.name, mensaje:error.message});
                 } else{
-                    response.redirect("/questions");
+                    console.log("Estoy en createQuestion 4");
+                    response.redirect("/questions/");
                 }
             });
         }
