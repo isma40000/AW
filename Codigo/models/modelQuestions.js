@@ -1,7 +1,7 @@
 "use strict"
 
 const moment = require('moment'); // Formatear fechas
-
+const util = require('util');
 class DAOQuestions{
 
     constructor(pool){
@@ -120,7 +120,7 @@ class DAOQuestions{
                         // Formateamos nuestro objeto
                         results[0].forEach(function(question){
                             question.tags = [];
-                            question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');                        
+                            question.q_date = moment(question.q_date).format('YYYY-MM-DD');                        
                             // if(question.body.length > 150){
                             //     question.body = question.body.slice(0, 150) + '...';
                             // }
@@ -171,7 +171,7 @@ class DAOQuestions{
                         });
                         results[1].forEach(function(question){
                             if(tags[question.question_id]){
-                                question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');
+                                question.q_date = moment(question.q_date).format('YYYY-MM-DD');
                                 question.tags = tags[question.question_id];
                                 // if(question.q_body.length > 150){
                                 //     question.q_body = question.body.slice(0, 150) + '...';
@@ -206,7 +206,7 @@ class DAOQuestions{
                         // Formateamos nuestro objeto
                         results[0].forEach(function(question){
                             question.tags = [];
-                            question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');
+                            question.q_date = moment(question.q_date).format('YYYY-MM-DD');
                             // if(question.body.length > 150){
                             //     question.body = question.body.slice(0, 150) + '...';
                             // }
@@ -236,33 +236,37 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                connection.query("SELECT COUNT(*) as filas FROM visits v WHERE v.question=? AND v.user=?", [ params.question, params.user ], function(error, results){
+                let sql1 = '', sql2 = '', sql3 = '', queryParams = [];
+                sql1 = "SELECT q.question_id, q.title, q.q_body, q.q_date, u.email , u.user_img, u.name FROM questions q JOIN users u ON q.user_email=u.email WHERE q.user_email=u.email AND q.question_id=?;";
+                sql2 = "SELECT t.name FROM tags t JOIN tags_questions tq ON t.name=tq.tag_name WHERE tq.question_id=?;";
+                sql3 = "SELECT a.answer_id, u.name, a.a_body, a.a_date, u.email, u.user_img FROM answers a JOIN users u WHERE a.user_email=u.email AND a.question_id=?;";
+                queryParams.push(params.question, params.question, params.question);
+
+                connection.query(sql1 + sql2 + sql3, [params.question,params.question,params.question], function(error, results){
+                    connection.release();
+                    if(error){
+                        callback(new Error("Error de acceso a la base de datos"));
+                    } else{
+                        let total = results.length;
+                        let q = results[0][0];//RowDataPacket dentro de resultado de consulta
+                        q.tags = [];
+                        q.q_date = moment(q.q_date).format('YYYY-MM-DD HH:mm:ss');
+                        results[1].forEach(function(tag){ q.tags.push(tag.name); });
+                        results[2].forEach(function(answer){console.log(answer.a_body); answer.a_date = moment(answer.a_date).format('YYYY-MM-DD'); });
+                        console.log("Pregunta: "+queryParams[0])
+                        
+                        console.log("Objeto: "+util.inspect(results[0], false, null, true /* enable colors */))
+                        callback(null, { question: q, answers: results[total - 1],n_answers: results[total-1].length });
+                    }
+                });
+                /* connection.query("SELECT COUNT(*) as filas FROM visits v WHERE v.question=? AND v.user=?", [ params.question, params.user ], function(error, results){
                     if(error){
                         callback(new Error("Error de acceso a la base de datos"));
                     } else{
                         // console.log(results);
-                        let sql1 = '', sql2 = '', sql3 = '', queryParams = [];
-                        sql1 = "SELECT q.question_id as qID, q.title, q.q_body, q.q_date, u.email as qUserID, u.user_img, u.name FROM questions q JOIN users u WHERE q.user_email=u.email AND q.question_id=?;";
-                        sql2 = "SELECT t.name FROM tags t JOIN tags_questions tq ON t.name=tq.tag_name WHERE tq.question_id=?;";
-                        sql3 = "SELECT a.answer_id as aID, u.name as aUser, a.a_body, a.a_date, u.email as userID, u.user_img FROM answers a JOIN users u WHERE a.user_email=u.email AND a.question_id=?;";
-                        queryParams.push(params.question, params.question, params.question);
-
-                        connection.query(sql1 + sql2 + sql3, queryParams, function(error, results){
-                            connection.release();
-                            if(error){
-                                callback(new Error("Error de acceso a la base de datos"));
-                            } else{
-                                let total = results.length;
-                                let q = results[0];
-                                q.tags = [];
-                                q.q_date = moment(q.q_date).format('YYYY-MM-DD HH:mm:ss');
-                                results[1].forEach(function(tag){ q.tags.push(tag.name); });
-                                results[2].forEach(function(answer){ answer.a_date = moment(answer.a_date).format('YYYY-MM-DD HH:mm:ss'); });
-                                callback(null, { question: q, answers: results[total - 1] });
-                            }
-                        });
+                        
                     }
-                });
+                }); */
             }
         });
     }
@@ -303,7 +307,7 @@ class DAOQuestions{
                         // Formateamos nuestro objeto
                         results[0].forEach(function(question){
                             question.tags = [];
-                            question.q_date = moment(question.q_date).format('YYYY-MM-DD HH:mm:ss');
+                            question.q_date = moment(question.q_date).format('YYYY-MM-DD');
                             // if(question.q_body.length > 150){
                             //     question.q_body = question.q_body.slice(0, 150) + '...';
                             // }

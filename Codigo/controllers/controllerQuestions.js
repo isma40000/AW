@@ -101,13 +101,13 @@ module.exports = {
                 response.status(500);
                 response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
-                response.render("page_QuestionDetails", { question: qData.question, answers: qData.answers });
+                response.render("page_QuestionDetail", { question: qData.question, answers: qData.answers, n_answers: qData.n_answers });
             }
         });
     },
 
     // Ruta: /questions/publicarRespuesta/:id para publicar una respuesta dentro de la vista de una pregunta
-    publishAnswer: function(request, response){
+    createAnswer: function(request, response){
         let params = {
             question    : request.params.id,
             text        : request.body.a_body,
@@ -119,7 +119,7 @@ module.exports = {
                 response.status(500);
                 response.render("error500",{titulo:error.name, mensaje:error.message});
             } else{
-                response.redirect("/questions");
+                response.redirect("/questions/"+params.question);
             }
         });
     },

@@ -35,7 +35,7 @@
                     <div class="row border border-success bg-light rounded justify-content-center m-3">
                         <div class="col-8 justify-content-center">
                             <label class="row rounded-top">
-                                <div class="ml-2 mt-2 question_title"><%= question.title %></div>
+                                <a class="ml-2 mt-2 question_title" href="/questions/<%= question.question_id %>"><%= question.title %></a>
                             </label>
                             <label class="row texto">
                                 <div class="ml-2 mt-1 mb-2 question_body"><%= question.q_body%></div>

@@ -18,9 +18,11 @@ questionsRouter.get("/create", controller.create);
 questionsRouter.get("/search", controller.findByText);
 questionsRouter.get("/:id", controller.getQuestion);
 
+
+
 //Acciones de las vistas
 questionsRouter.post("/createQuestion", controller.createQuestion);
-questionsRouter.post("/publishAnswer/:id", controller.publishAnswer);
+questionsRouter.post("/createAnswer/:id", controller.createAnswer);
 
 //questionsRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
 //questionsRouter.use(middlewares.middlewareServerError); // middleware ERROR 500   

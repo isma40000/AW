@@ -40,11 +40,11 @@
     -webkit-box-orient: vertical;
 }
 .question_body{
-   
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 10;
     -webkit-box-orient: vertical;
 }
 .question_nombre{
