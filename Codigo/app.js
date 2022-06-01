@@ -65,7 +65,7 @@ app.get("/login", (request, response) => {
 
 app.get("/page_Main", middlewares.loggedCheck, (request, response) => {
     response.status(200);
-    response.render("page_Main",{userImg : null});
+    response.render("page_Main",{userImg : request.session.currentImg});
 });
 
 app.get("/imagen/:id", middlewares.loggedCheck, function(request, response){

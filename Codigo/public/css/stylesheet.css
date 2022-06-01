@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Akronim);
 body{
     /* background-image: url(../img/fondo.jpg);  */
     /* background-size: cover; height: 100vh; */
@@ -52,4 +53,81 @@ label{
 
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   background: linear-gradient(to bottom,rgba(255, 255, 255, 1), rgba(67, 233, 123, 1) 40%, rgba(255, 255, 255, 1) 70%,rgba(67, 233, 123, 1))
+}
+.c404{
+    font-size: 8em;
+}
+.fire {
+	width: 80%;
+	max-width: 1000px;
+	height: 200px;
+
+	background-position: center center;
+	background-size: 1000px 200px;
+	border-radius: 10px;
+    color: white;
+	overflow: hidden;
+    text-align: center;
+	vertical-align: middle;
+
+}
+.fire:before {
+	content: '';
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.Blazing {
+	display: inline-block;
+	margin: 0;
+
+    color: white;
+    font-size: 100px;
+	line-height: 50px;
+	min-width: 50px;
+	outline: none;
+	vertical-align: middle;
+    
+	text-shadow:
+        0 3px 20px green,
+        0 0 20px green,
+		0 0 10px rgb(12, 206, 38),
+		4px -5px 6px rgb(136, 255, 0),
+		-4px -10px 10px rgb(134, 241, 12),
+		0 -10px 30px rgb(138, 233, 29);
+	animation: 2s Blazing infinite alternate linear;
+}
+
+@keyframes Blazing {
+	0%   { text-shadow: 0 3px 20px green, 0 0 20px green,
+		0 0 10px rgb(12, 206, 38),
+		0 0 0 rgb(136, 255, 0),
+		0 0 5px rgb(134, 241, 12),
+		-2px -5px 5px rgb(138, 233, 29),
+		4px -10px 10px rgb(157, 255, 0); }
+	25%   { text-shadow: 0 3px 20px green, 0 0 30px green,
+		0 0 20px rgb(12, 206, 38),
+		0 0 5px yellow,
+		-2px -5px 5px yellow,
+		3px -10px 10px yellow,
+		-4px -15px 20px yellow; }
+	50%   { text-shadow: 0 3px 20px green, 0 0 20px green,
+		0 -5px 10px rgb(12, 206, 38),
+		-2px -5px 5px yellow,
+		3px -10px 10px yellow,
+		-4px -15px 20px yellow,
+		2px -20px 30px rgba(255,255,0,0.5); }
+	75%   { text-shadow: 0 3px 20px green, 0 0 20px green,
+		0 -5px 10px rgb(12, 206, 38),
+		3px -5px 5px yellow,
+		-4px -10px 10px yellow,
+		2px -20px 30px rgba(255,255,0,0.5),
+		0px -25px 40px rgba(255,255,0,0)}
+	100%   { text-shadow: 0 3px 20px green, 0 0 20px green,
+		0 0 10px rgb(12, 206, 38),
+		0 0 0 yellow,
+		0 0 5px yellow,
+		-2px -5px 5px yellow,
+		4px -10px 10px yellow; }
 }
