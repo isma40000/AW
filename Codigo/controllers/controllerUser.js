@@ -107,6 +107,9 @@ module.exports = {
 
     // Ruta: POST /loginout/logoutUser
     logoutUser: function(request, response){
+        request.session.currentName==undefined;
+        request.session.currentEmail==undefined;
+        request.session.currentImg==undefined;
         request.session.destroy();
         response.redirect("/users/logoutUser");
     }

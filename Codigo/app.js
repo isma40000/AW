@@ -60,6 +60,7 @@ app.get("/", (request, response) => {
 app.get("/login", (request, response) => {
     console.log("Estoy en app.js /login");
     response.status(200);
+    request.session.destroy();
     response.render("page_Login",{userImg : null});
 });
 
