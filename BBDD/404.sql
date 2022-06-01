@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-05-2022 a las 20:46:23
+-- Tiempo de generación: 01-06-2022 a las 18:27:11
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.3
 
@@ -31,7 +31,7 @@ CREATE TABLE `answers` (
   `answer_id` int(11) NOT NULL,
   `a_body` varchar(5000) NOT NULL,
   `user_email` varchar(100) NOT NULL,
-  `a_date` date NOT NULL,
+  `a_date` date NOT NULL DEFAULT current_timestamp(),
   `question_id` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -41,7 +41,13 @@ CREATE TABLE `answers` (
 
 INSERT INTO `answers` (`answer_id`, `a_body`, `user_email`, `a_date`, `question_id`) VALUES
 (1, 'La propiedad position sirve para posicionar un elemento dentro de la página. Sin embargo,\r\ndependiendo de cual sea la propiedad que usemos, el elemento tomará una referencia u otra\r\npara posicionarse respecto a ella.\r\nLos posibles valores que puede adoptar la propiedad position son: static | relative | absolute |\r\nfixed | inherit | initial.\r\n', 'lucas@404.es', '2021-12-14', 1),
-(2, 'La pseudoclase :nth-child() selecciona los hermanos que cumplan cierta condición definida en\r\nla fórmula an + b. a y b deben ser números enteros, n es un contador. El grupo an representa\r\nun ciclo, cada cuantos elementos se repite; b indica desde donde empezamos a contar.\r\n', 'emy@404.es', '2021-12-15', 2);
+(2, 'La pseudoclase :nth-child() selecciona los hermanos que cumplan cierta condición definida en\r\nla fórmula an + b. a y b deben ser números enteros, n es un contador. El grupo an representa\r\nun ciclo, cada cuantos elementos se repite; b indica desde donde empezamos a contar.\r\n', 'emy@404.es', '2021-12-15', 2),
+(3, 'Buenos días, exactamente hay 143 preguntas.', 'nico@404.es', '2022-06-01', 51),
+(4, 'afeeeeeeeeee\r\nfafefafae\r\nafaeffafeaf\r\nafafaefeaf\r\nAdiós.', 'nico@404.es', '2022-06-01', 51),
+(5, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'nico@404.es', '2022-06-01', 51),
+(6, 'Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página. Sé que estas propiedades de CSS sirven para posicionar un elemento dentro de la página.', 'nico@404.es', '2022-06-01', 51),
+(7, 'Creo q ya van las respuestas como la seda.', 'nico@404.es', '2022-06-01', 51),
+(8, 'Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.Creo q ya van las respuestas como la seda.', 'nico@404.es', '2022-06-01', 51);
 
 -- --------------------------------------------------------
 
@@ -81,14 +87,6 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `sessions`
---
-
-INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('JSaUHatm9DbSAO6wo23IDq7EfnOVyaWj', 1654097778, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentName\":\"nicoPoro\",\"currentEmail\":\"nico2@404.es\",\"currentImg\":\"/img/defecto2.png\"}'),
-('dK_YDSB7ZDaqrdjV3BVQcduk2YQdy7vK', 1654109017, '{\"cookie\":{\"originalMaxAge\":null,\"expires\":null,\"httpOnly\":true,\"path\":\"/\"},\"currentName\":\"Nico\",\"currentEmail\":\"nico@404.es\",\"currentImg\":\"/img/defecto1.png\"}');
 
 -- --------------------------------------------------------
 
@@ -281,7 +279,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `questions`
