@@ -61,7 +61,7 @@ app.get("/login", (request, response) => {
     console.log("Estoy en app.js /login");
     response.status(200);
     request.session.destroy();
-    response.render("page_Login",{userImg : null});
+    response.render("page_Login",{ errorMsg : null });
 });
 
 app.get("/page_Main", middlewares.loggedCheck, (request, response) => {
@@ -89,6 +89,6 @@ app.listen(config.port, function(err) {
    }
 });
 //------------------------------ERRORMIDDLEWARE------------------------------//
-//app.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-//app.use(middlewares.middlewareServerError); // middleware ERROR 500
+app.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
+app.use(middlewares.middlewareServerError); // middleware ERROR 500
 

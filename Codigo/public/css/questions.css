@@ -10,9 +10,18 @@
 .error{
     background-color: rgb(230, 49, 49);
     border-color: rgb(66, 16, 16);
-    color: rgb(51, 14, 14);
+    color: rgb(0, 0, 0);
     border-style: solid;
-    border-radius: 25%;
+    width:60%;
+    border-radius: 25px;
+    /* fallback for old browsers */
+    background: #43e97b;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to top, rgb(245, 92, 72), rgb(255, 255, 255));
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to top, rgb(245, 92, 72), rgb(255, 255, 255))
 }
 .texto-tag{
     font-size: 0.8em;

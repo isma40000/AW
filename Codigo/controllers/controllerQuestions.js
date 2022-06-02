@@ -9,7 +9,6 @@ let dao             = new DAOQuestions(pool);
 module.exports = {
     // Ruta: /questions/
     getAllQuestions : function(request, response){
-        console.log("He llegado a getAllQuestions");
         dao.readQuestions(function(error, data){
             if(error){
                 console.log(error);
@@ -52,7 +51,6 @@ module.exports = {
 
     // Ruta: POST /questions/createQuestion del FORM para crear la pregunta
     createQuestion: function(request, response){
-        console.log("Estoy en createQuestion");
         let tags;
         let aux = [];
         if(request.body.tags !== undefined){
@@ -76,18 +74,14 @@ module.exports = {
             body    : request.body.bodyArea,
             tags    : tags
         };
-        console.log("Estoy en createQuestion 2");
         if(params.title === "" || params.body === ""){
             response.render("page_QuestionsCreate", { errorMsg : 'Rellena todos los campos obligatorios marcados con *' });
         } else{
-            console.log("Estoy en createQuestion 3");
             dao.createQuestion(params, function(error){
-                console.log("Estoy en createQuestion 4");
                 if(error){
                     response.status(500);
                     response.render("error500",{titulo:error.name, mensaje:error.message});
                 } else{
-                    console.log("Estoy en createQuestion 4");
                     response.redirect("/questions/");
                 }
             });
@@ -113,7 +107,6 @@ module.exports = {
             text        : request.body.a_body,
             user        : request.session.currentEmail
         };
-        console.log(params);
         dao.publishAnswer(params, function(error){
             if(error){
                 response.status(500);
@@ -126,7 +119,6 @@ module.exports = {
 
     // Ruta: /questions/notAnswered
     getNotAnswered: function(request, response){
-        console.log("He llegado al controlador de preguntas")
         dao.getNotAnswered(function(error, data){
             if(error){
                 response.status(500);

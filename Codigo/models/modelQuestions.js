@@ -25,44 +25,31 @@ class DAOQuestions{
     createQuestion(data, callback){
         this.pool.getConnection(function(error, connection){
             if(error){
-                console.log("C1");
                 connection.release();
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
                 connection.query("INSERT INTO questions(`user_email`, `title`, `q_body`) VALUES (?,?,?)", [ data.email, data.title, data.body ] , function(error, result){
                     if(error){
-                        console.log("C2");
                         connection.release();
                         callback(new Error("Error de acceso a la base de datos"));
                     } else{
                         var questionID = result.insertId;
                         if(data.tags.length > 0){
-                            console.log(data.tags);
-                            console.log(data.tags.length);
                             data.tags.forEach(function (value, i) {
                                 let param=value;
-                                console.log("Parametro "+i+" "+param);
                                 //params.push([ questionID, data.tags[i] ]);
                                 connection.query("SELECT name FROM tags WHERE name=?", [ param ], function(error,res1){
                                     //connection.release();
                                     if(error){
-                                        console.log(error);
-                                        console.log("C3");
                                         connection.release();
                                         callback(new Error("Error de acceso a la base de datos tags"));
                                     } else{
-                                        console.log(res1.length)
                                         if(res1.length === 0){
-                                            console.log("He entrado en donde los tag con longitud = "+res1.length +" Parametro "+i+" "+param);
                                             connection.query("INSERT INTO tags (name) VALUES (?);", [ param ], function(error){
                                                 if(error){
                                                     if (error.code === 'ER_DUP_ENTRY') {
                                                         console.log("tag no insertado -->  ER_DUP_ENTRY");
-                                                        console.log("C4-a "+i);
                                                     }else{
-                                                        console.log("tag no insertado -->  hay error");
-                                                        console.log(error);
-                                                        console.log("C4-b "+i);
                                                         connection.release();
                                                         callback(new Error("Error de acceso a la base de datos tags"));
                                                     }
@@ -74,23 +61,15 @@ class DAOQuestions{
                                     }
                                 })
                                 connection.query("INSERT INTO tags_questions (tag_name,question_id) VALUES (?,?);", [ param,questionID], function(error){
-                                    console.log("La verdadera vuelta "+ i);
                                     if(error){
-                                        console.log("C5");
                                         connection.release();
-                                        console.log(error);
                                         callback(new Error("Error de acceso a la base de datos tags"));
-                                    }
-                                    else{
-                                        console.log("C6");
                                     }
                                 }); 
                             });
-                            console.log("C7");
                             connection.release();
                             callback(null);
                         } else {
-                            console.log("C8");
                             connection.release();
                             callback(null);
                         }
@@ -250,12 +229,11 @@ class DAOQuestions{
                         let total = results.length;
                         let q = results[0][0];//RowDataPacket dentro de resultado de consulta
                         q.tags = [];
-                        q.q_date = moment(q.q_date).format('YYYY-MM-DD HH:mm:ss');
+                        q.q_date = moment(q.q_date).format('YYYY-MM-DD');
                         results[1].forEach(function(tag){ q.tags.push(tag.name); });
                         results[2].forEach(function(answer){console.log(answer.a_body); answer.a_date = moment(answer.a_date).format('YYYY-MM-DD'); });
-                        console.log("Pregunta: "+queryParams[0])
                         
-                        console.log("Objeto: "+util.inspect(results[0], false, null, true /* enable colors */))
+                        //console.log("Objeto: "+util.inspect(results[0], false, null, true /* enable colors */))
                         callback(null, { question: q, answers: results[total - 1],n_answers: results[total-1].length });
                     }
                 });
@@ -293,7 +271,6 @@ class DAOQuestions{
             if(error){
                 callback(new Error("Error de conexion a la base de datos"));
             } else{
-                console.log("Modelo preguntas: getNotAnswered")
                 let sql0 = "SELECT DISTINCT(question_id) FROM answers";
                 let sql1 = "SELECT q.question_id, q.user_email, q.title, q.q_body, q.q_date, u.name, u.user_img as userImg, u.email as userID FROM questions q JOIN users u WHERE q.user_email=u.email AND q.question_id NOT IN ("+sql0+");";
                 let sql2 = "SELECT t.name, q.question_id FROM tags t JOIN tags_questions tq ON tq.tag_name = t.name JOIN questions q ON tq.question_id = q.question_id;";

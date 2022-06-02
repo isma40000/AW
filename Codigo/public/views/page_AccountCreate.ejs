@@ -53,6 +53,13 @@
             </form>
             <div class="form-row text-center mt-4">
                 <a class="btn bg-dark text-light mb-2" style="width: 30%;" href="/login/">Iniciar sesión</a>
+            </div>
+            <div class="row text-center justify-content-center pb-3">
+                <% if(errorMsg){ %>
+                    <div class="error ">
+                        <%= errorMsg %>
+                    </div>
+                <% } %>
             </div>  
         </div>
     </div>

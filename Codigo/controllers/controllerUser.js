@@ -67,7 +67,6 @@ module.exports = {
         if(data.profileImg){
             data.profileImg = data.profileImg.filename // nombre del fichero, luego para obtener las imgs se hace a traves de /imagen/:id
         }
-        console.log(data.profileImg)
         if(data.password === data.password_c){
             if(data.name === '' || data.email === '' || data.password === '' || data.password_c === ''){
                 response.render("page_AccountCreate", { errorMsg : 'Rellena todos los campos obligatorios marcados con *' });
@@ -88,7 +87,6 @@ module.exports = {
 
     // Ruta: POST a la bbdd para iniciar la sesion
     loginUser: function(request, response){
-        console.log("He llegado al controler");
         daoUsers.isUserCorrect(request.body.email, request.body.password, function(error, user){
             if(error){
                 response.status(500);
