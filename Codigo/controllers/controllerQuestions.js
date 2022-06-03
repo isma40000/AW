@@ -56,7 +56,6 @@ module.exports = {
         if(request.body.tags !== undefined){
             tags=request.body.tags;
         }else{tags='';}
-        // labels = request.body.labels || '',
         tags = tags.split('@').filter(function(tag){
             var check;
             if(tag !== '' && !aux.includes(tag)){

@@ -6,13 +6,6 @@ let daoUsers         = new DUsers(pool);
 
 module.exports = {
 
-    /* getLoginRedirect: function(request, response){
-        response.render("page_Login", { errorMsg : null });
-    },
-    paginaMain: function(request, response){
-        response.render("page_Main", { userImg : request.session.currentImg });
-    }, */
-
     // Ruta: /users/createAccount POST a la bbdd del register
     registerUser: function(request, response){
         let data = {
