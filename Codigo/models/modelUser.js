@@ -128,21 +128,16 @@ class DUsers{
                         let sql1 = "SELECT u.date, u.name, u.user_img as img, FROM users u WHERE u.id=?;";
                         let sql2 = "SELECT COUNT(*) AS questions FROM questions WHERE user=?;";
                         let sql3 = "SELECT COUNT(*) AS answers FROM answers WHERE user=?;";
-                        // let sql4 = "SELECT MedalType, COUNT(MedalType) as medalsNumber, MedalName FROM medals_user WHERE IdUser=? GROUP BY MedalType ORDER BY MedalType DESC";
-                       // let sql4 = "SELECT MedalType as type, MedalName as name, COUNT(*) as totalCount FROM medals_user WHERE IdUser=? GROUP BY MedalName;";
                         connection.query(sql1 + sql2 + sql3  [ id, email, email ] , function(error, results){
                             connection.release();
                             if(error){
                                 callback(new Error("Error de acceso a la base de datos"));
                             } else{
-                                let response = { user : {}/*, medals : { Gold:[], Bronze:[], Silver:[] }*/ };
+                                let response = { user : {}};
                                 response.user           = results[0][0];
-                                response.user.date      = moment(response.user.date).format('YYYY-MM-DD HH:mm:ss');
+                                response.user.date      = moment(response.user.date).format('YYYY-MM-DD');
                                 response.user.questions = results[1][0].questions;
                                 response.user.answers   = results[2][0].answers;
-                               /* results[3].forEach(medalPkg => {
-                                    response.medals[medalPkg.type].push(medalPkg);
-                                });*/
                                 callback(false, response);
                             }
                         });

@@ -1,7 +1,6 @@
 "use strict";
 
 //----------------------------TODOS LOS "require"s-------------------------//
-//LOS FAVICONS, MORGAN Y TAL SEGURAMENTE TENDRAMOS QUE CAMBIARLO
 const middlewares       = require('./middlewares');
 const bodyParser        = require('body-parser');
 const express           = require('express');
@@ -33,7 +32,6 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "./public/views");
 // Recursos estaticos
-//LOS FAVICONS, MORGAN Y TAL SEGURAMENTE TENDRAMOS QUE CAMBIARLO
 app.use(express.static(staticFiles));
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
@@ -42,11 +40,6 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use(middlewareSession);
-
-// app.use(function(request, response, next) {
-//     console.log("request.session.currentUser ========> ", request.session.currentUser);
-//     next();
-// })
 
 //--------------------------------- RUTAS ----------------------------------//
 app.use("/users", usersRouter);

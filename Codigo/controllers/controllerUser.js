@@ -5,57 +5,15 @@ const pool      = require("../database");
 let daoUsers         = new DUsers(pool);
 
 module.exports = {
-    // Ruta: /usuarios/
-    // getAllUsers : function(request, response){
-    //     dao.readAllUsers(function(error, allUsers){
-    //         if(error){
-    //             response.status(500);
-    //             response.render("error_500");
-    //         } else{
-    //             response.render("users", { users: allUsers, title: 'Usuarios' });
-    //         }
-    //     });
-    // },
 
-    // Ruta: /usuarios/filtrar por nombre de usuario
-    // findByFilter: function(request, response){
-    //     dao.findByFilter(`%${request.query.filtro}%`, function(error, users){
-    //         if(error){
-    //             response.status(500);
-    //             response.render("error_500");
-    //         } else{
-    //             response.render("users", { users: users, title: `Usuarios filtrados por ["${request.query.filtro}"]` });
-    //         }
-    //     });
-    // },
-
-    // Ruta: /usuarios/perfil/:id para obtener el perfil de un usuario
-    // findByID: function(request, response){
-    //     dao.findByID(request.params.id, function(error, data){
-    //         if(error){
-    //             response.status(500);
-    //             response.render("error_500");
-    //         } else{
-    //             response.render("profile", { user: data.user});
-    //         }
-    //     });
-    // },
-    //FUNCIONES RELACIONADAS CON EL LOGIN
-    
-    // Ruta: /loginout/registro
-    /* getRegisterRedirect: function(request, response){
-        response.render("page_AccountCreate", { errorMsg : null });
-    }, */
-
-    // Ruta: /loginout/login
-    getLoginRedirect: function(request, response){
+    /* getLoginRedirect: function(request, response){
         response.render("page_Login", { errorMsg : null });
     },
     paginaMain: function(request, response){
         response.render("page_Main", { userImg : request.session.currentImg });
-    },
+    }, */
 
-    // Ruta: POST a la bbdd del register
+    // Ruta: /users/createAccount POST a la bbdd del register
     registerUser: function(request, response){
         let data = {
             email       : request.body.email,
@@ -85,7 +43,7 @@ module.exports = {
         }
     },
 
-    // Ruta: POST a la bbdd para iniciar la sesion
+    // Ruta: /users
     loginUser: function(request, response){
         daoUsers.isUserCorrect(request.body.email, request.body.password, function(error, user){
             if(error){
@@ -103,12 +61,12 @@ module.exports = {
         });
     },
 
-    // Ruta: POST /loginout/logoutUser
+    // Ruta: POST /users/logoutUser
     logoutUser: function(request, response){
         request.session.currentName==undefined;
         request.session.currentEmail==undefined;
         request.session.currentImg==undefined;
         request.session.destroy();
-        response.redirect("/users/logoutUser");
+        response.redirect("/login");
     }
 };

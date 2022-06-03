@@ -37,9 +37,7 @@ class DAOQuestions{
                         if(data.tags.length > 0){
                             data.tags.forEach(function (value, i) {
                                 let param=value;
-                                //params.push([ questionID, data.tags[i] ]);
                                 connection.query("SELECT name FROM tags WHERE name=?", [ param ], function(error,res1){
-                                    //connection.release();
                                     if(error){
                                         connection.release();
                                         callback(new Error("Error de acceso a la base de datos tags"));
@@ -100,9 +98,6 @@ class DAOQuestions{
                         results[0].forEach(function(question){
                             question.tags = [];
                             question.q_date = moment(question.q_date).format('YYYY-MM-DD');                        
-                            // if(question.body.length > 150){
-                            //     question.body = question.body.slice(0, 150) + '...';
-                            // }
                             questions[question.question_id] = question;
                         });
                         results[1].forEach(function(tag){
@@ -152,9 +147,6 @@ class DAOQuestions{
                             if(tags[question.question_id]){
                                 question.q_date = moment(question.q_date).format('YYYY-MM-DD');
                                 question.tags = tags[question.question_id];
-                                // if(question.q_body.length > 150){
-                                //     question.q_body = question.body.slice(0, 150) + '...';
-                                // }
                                 response.push(question);
                             }
                         });
@@ -186,9 +178,6 @@ class DAOQuestions{
                         results[0].forEach(function(question){
                             question.tags = [];
                             question.q_date = moment(question.q_date).format('YYYY-MM-DD');
-                            // if(question.body.length > 150){
-                            //     question.body = question.body.slice(0, 150) + '...';
-                            // }
                             questions[question.question_id] = question;
                         });
                         results[1].forEach(function(tag){
@@ -196,12 +185,10 @@ class DAOQuestions{
                                 questions[tag.question_id].tags.push(tag.name);
                             }
                         });
-                        
                         // Formateamos la salida
                         for (const [ k, v ] of Object.entries(questions)) {
                             response.push(v);
                         }
-                        // console.log(response);
                         callback(false, { totalQuestions: response.length, questions: DAOQuestions.orderQuestions(response) });
                     }
                 });
@@ -209,7 +196,6 @@ class DAOQuestions{
         });
     }
 
-    // INCREMENTAR EN 1 EL NUMERO DE VISITAS A LA PREGUNTA PARA EL USUARIO ACTUAL SI NO LA HA VISITADO ANTES
     filterQuestionByID(params, callback){
         this.pool.getConnection(function(error, connection){
             if(error){
@@ -232,19 +218,10 @@ class DAOQuestions{
                         q.q_date = moment(q.q_date).format('YYYY-MM-DD');
                         results[1].forEach(function(tag){ q.tags.push(tag.name); });
                         results[2].forEach(function(answer){console.log(answer.a_body); answer.a_date = moment(answer.a_date).format('YYYY-MM-DD'); });
-                        
-                        //console.log("Objeto: "+util.inspect(results[0], false, null, true /* enable colors */))
+
                         callback(null, { question: q, answers: results[total - 1],n_answers: results[total-1].length });
                     }
                 });
-                /* connection.query("SELECT COUNT(*) as filas FROM visits v WHERE v.question=? AND v.user=?", [ params.question, params.user ], function(error, results){
-                    if(error){
-                        callback(new Error("Error de acceso a la base de datos"));
-                    } else{
-                        // console.log(results);
-                        
-                    }
-                }); */
             }
         });
     }
@@ -285,9 +262,6 @@ class DAOQuestions{
                         results[0].forEach(function(question){
                             question.tags = [];
                             question.q_date = moment(question.q_date).format('YYYY-MM-DD');
-                            // if(question.q_body.length > 150){
-                            //     question.q_body = question.q_body.slice(0, 150) + '...';
-                            // }
                             questions[question.question_id] = question;
                         });
                         results[1].forEach(function(tag){

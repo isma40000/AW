@@ -100,7 +100,7 @@ module.exports = {
         });
     },
 
-    // Ruta: /questions/publicarRespuesta/:id para publicar una respuesta dentro de la vista de una pregunta
+    // Ruta: /questions/createAnswer/:id para publicar una respuesta dentro de la vista de una pregunta
     createAnswer: function(request, response){
         let params = {
             question    : request.params.id,

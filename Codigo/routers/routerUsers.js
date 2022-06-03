@@ -8,23 +8,16 @@ const bodyParser    = require('body-parser');
 const multer     = require('multer');
 const path       = require('path');
 const session = require('express-session');
+
 var storage = multer.diskStorage({
     destination: path.join(__dirname, "../public/img"),
     filename: function(req, file, callback) {
       callback(null, file.originalname);
     }
   });
+  
 //const upload  = multer({ dest : path.join(__dirname, "../public/img") }); // Otro codificador de forms como body-parser pero para imagenes
 const upload  = multer({ storage: storage });
-//OPERACIONES RELACIONADAS CON USURARIO, BUSQUEDAS Y ETC
-
-// Vistas y acciones
-// usersRouter.get("/", controller.getAllUsers);
-// usersRouter.get("/filter", controller.findByFilter);
-// usersRouter.get("/profile/:id", controller.findByID);
-
-/*usersRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-usersRouter.use(middlewares.middlewareServerError); // middleware ERROR 500*/
 
 
 //OPERRACIONES RELACIONADAS CON EL LOGIN

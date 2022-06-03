@@ -23,8 +23,6 @@ questionsRouter.get("/:id", controller.getQuestion);
 //Acciones de las vistas
 questionsRouter.post("/createQuestion", controller.createQuestion);
 questionsRouter.post("/createAnswer/:id", controller.createAnswer);
-
-//questionsRouter.use(middlewares.middlewareNotFoundError); // middleware ERROR 404
-//questionsRouter.use(middlewares.middlewareServerError); // middleware ERROR 500   
+ 
 
 module.exports = questionsRouter;

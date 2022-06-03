@@ -12,7 +12,6 @@ module.exports = {
         }
     },
 
-
     middlewareNotFoundError: function(request, response, next){
         response.status(404);
         response.render("error404");

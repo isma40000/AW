@@ -1,6 +1,6 @@
 .user_img{
     max-height: 8em;
-    border-radius: 50%;
+    border-radius: 25px;
 }
 .error{
     background-color: rgb(230, 49, 49);
